@@ -1,43 +1,43 @@
-/* Copia o e-mail pro clipboard com retorno visual no botão.
-   O método moderno (navigator.clipboard) não funciona em todo navegador,
-   então se ele falhar caímos no método antigo (selecionar texto + copy). */
+/* Copia o e-mail pro clipboard com retorno visual no botão. */
 (function () {
-  const botao = document.getElementById('botaoCopiar');
-  const textoOriginal = botao.textContent.trim();
+  const botaoEmail = document.getElementById('botaoCopiarEmail');
+  const botaoTelefone = document.getElementById('botaoCopiarTelefone');
+  const textoOriginalEmail = botaoEmail.textContent.trim();
+  const textoOriginalTelefone = botaoTelefone.textContent.trim();
 
-  function copiarComTextarea(valor) {
-    const campo = document.createElement('textarea');
-    campo.value = valor;
-    campo.style.position = 'fixed';
-    campo.style.opacity = '0';
-    document.body.appendChild(campo);
-    campo.select();
-    const deuCerto = document.execCommand('copy');
-    campo.remove();
-    return deuCerto;
-  }
-
-  async function copiar(valor) {
-    if (navigator.clipboard) {
-      try {
-        await navigator.clipboard.writeText(valor);
-        return true;
-      } catch {
-        // segue para o método antigo abaixo
-      }
+  botaoEmail.addEventListener('click', async () => {
+    let deuCerto = true;
+    try {
+      await navigator.clipboard.writeText(botaoEmail.dataset.valor);
+    } catch {
+      deuCerto = false;
     }
-    return copiarComTextarea(valor);
-  }
 
-  botao.addEventListener('click', async () => {
-    const deuCerto = await copiar(botao.dataset.valor);
-
-    botao.textContent = deuCerto ? 'copiado ✓' : 'selecione e copie';
-    botao.classList.toggle('copiado', deuCerto);
+    botaoEmail.textContent = deuCerto ? 'copiado ✓' : 'selecione e copie';
+    botaoEmail.classList.toggle('copiado', deuCerto);
 
     setTimeout(() => {
-      botao.textContent = textoOriginal;
-      botao.classList.remove('copiado');
+      botaoEmail.textContent = textoOriginalEmail;
+      botaoEmail.classList.remove('copiado');
     }, 2000);
   });
+
+  botaoTelefone.addEventListener('click', async () => {
+    let deuCerto = true;
+    try {
+      await navigator.clipboard.writeText(botaoTelefone.dataset.valor);
+    } catch {
+      deuCerto = false;
+    }
+
+    botaoTelefone.textContent = deuCerto ? 'copiado ✓' : 'selecione e copie';
+    botaoTelefone.classList.toggle('copiado', deuCerto);
+
+    setTimeout(() => {
+      botaoTelefone.textContent = textoOriginalTelefone;
+      botaoTelefone.classList.remove('copiado');
+    }, 2000);
+  });
+
+
 })();
