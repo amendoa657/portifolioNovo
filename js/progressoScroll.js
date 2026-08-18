@@ -1,9 +1,6 @@
 /* Linha fina embaixo da navbar mostrando o progresso de leitura. */
-
 (function () {
   const barra = document.getElementById('navProgresso');
-  if (!barra) return;
-
   let agendado = false;
 
   function atualizar() {

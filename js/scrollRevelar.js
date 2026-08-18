@@ -1,8 +1,6 @@
 /* Revela os blocos conforme entram na tela. Uma vez revelado, para de observar. */
-
 (function () {
   const alvos = document.querySelectorAll('.revelar');
-  if (!alvos.length) return;
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     alvos.forEach(el => el.classList.add('visivel'));

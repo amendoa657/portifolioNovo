@@ -1,41 +1,35 @@
 /* Cada ano da linha do tempo abre a sua imagem no painel.
    No desktop o painel fica fixo à direita; no telefone ele é movido para
    logo abaixo do item clicado, senão a foto apareceria longe do clique. */
-
 (function () {
-  const lista   = document.getElementById('linhaTempo');
-  const painel  = document.getElementById('trajetoriaPainel');
-  const moldura = painel && painel.querySelector('.painelMoldura');
-  const imagem  = document.getElementById('painelImagem');
+  const lista = document.getElementById('linhaTempo');
+  const painel = document.getElementById('trajetoriaPainel');
+  const moldura = painel.querySelector('.painelMoldura');
+  const imagem = document.getElementById('painelImagem');
   const varredura = document.getElementById('painelVarredura');
   const legenda = document.getElementById('painelLegenda');
-  const texto   = document.getElementById('painelTexto');
-
-  if (!lista || !painel || !imagem) return;
+  const texto = document.getElementById('painelTexto');
 
   const itens = [...lista.querySelectorAll('.linhaTempoItem')];
-  if (!itens.length) return;
-
-  const colunaDesktop = painel.parentElement;      // .trajetoriaGrade
+  const colunaDesktop = painel.parentElement; // .trajetoriaGrade
   const ehDesktop = window.matchMedia('(min-width: 901px)');
   const movimentoReduzido = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   let selecionado = itens[0];
 
-  /* reinicia uma animação CSS: tira a classe, força refluxo, devolve */
-  function reanimar(el, classe) {
-    if (!el) return;
-    el.classList.remove(classe);
-    void el.offsetWidth;
-    el.classList.add(classe);
+  /* reinicia uma animação CSS: tira a classe, força o navegador a notar
+     que ela sumiu, devolve — assim ela toca de novo mesmo se já tivesse rodado */
+  function reanimar(elemento, classe) {
+    elemento.classList.remove(classe);
+    void elemento.offsetWidth;
+    elemento.classList.add(classe);
   }
 
   function posicionarPainel(item) {
     if (ehDesktop.matches) {
-      if (painel.parentElement !== colunaDesktop) colunaDesktop.appendChild(painel);
+      colunaDesktop.appendChild(painel);
     } else {
-      const destino = item.querySelector('.linhaTempoCorpo');
-      if (destino && painel.parentElement !== destino) destino.appendChild(painel);
+      item.querySelector('.linhaTempoCorpo').appendChild(painel);
     }
   }
 
@@ -43,47 +37,42 @@
     itens.forEach(i => {
       const ativo = i === item;
       i.classList.toggle('selecionado', ativo);
-      const botao = i.querySelector('.linhaTempoAno');
-      if (botao) botao.setAttribute('aria-pressed', String(ativo));
+      i.querySelector('.linhaTempoAno').setAttribute('aria-pressed', String(ativo));
     });
   }
 
   function trocar(item, animar) {
-    const src = item.dataset.img;
-    const descricao = item.dataset.legenda || '';
-
     selecionado = item;
     marcar(item);
     posicionarPainel(item);
 
-    if (texto) texto.textContent = descricao;
-    imagem.alt = descricao;
+    texto.textContent = item.dataset.legenda;
+    imagem.alt = item.dataset.legenda;
 
     if (!animar || movimentoReduzido.matches) {
-      imagem.src = src;
+      imagem.src = item.dataset.img;
       return;
     }
 
-    // carrega antes de revelar, para a animação não rodar sobre um quadro vazio
-    if (moldura) moldura.classList.add('carregando');
-
+    // carrega a imagem escondida antes de animar, senão a animação
+    // rodaria em cima de um quadro vazio até a imagem chegar
+    moldura.classList.add('carregando');
     const previa = new Image();
     previa.onload = previa.onerror = () => {
-      if (moldura) moldura.classList.remove('carregando');
-      imagem.src = src;
+      moldura.classList.remove('carregando');
+      imagem.src = item.dataset.img;
       reanimar(imagem, 'entrando');
       reanimar(varredura, 'ativa');
       reanimar(legenda, 'entrando');
     };
-    previa.src = src;
+    previa.src = item.dataset.img;
   }
 
   lista.addEventListener('click', (evento) => {
     const botao = evento.target.closest('.linhaTempoAno');
     if (!botao) return;
     const item = botao.closest('.linhaTempoItem');
-    if (!item || item === selecionado) return;
-    trocar(item, true);
+    if (item !== selecionado) trocar(item, true);
   });
 
   // setas para cima/baixo percorrem os anos, como numa lista
@@ -102,6 +91,5 @@
 
   ehDesktop.addEventListener('change', () => posicionarPainel(selecionado));
 
-  // estado inicial, sem animação
-  trocar(itens[0], false);
+  trocar(itens[0], false); // estado inicial, sem animação
 })();

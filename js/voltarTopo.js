@@ -1,9 +1,6 @@
 /* Botão de voltar ao topo — aparece depois da primeira dobra. */
-
 (function () {
   const botao = document.getElementById('voltarTopo');
-  if (!botao) return;
-
   let agendado = false;
 
   function atualizar() {

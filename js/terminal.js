@@ -5,7 +5,6 @@
    ========================================================================= */
 
 (function () {
-  const terminal      = document.getElementById('terminal');
   const corpo         = document.getElementById('terminalCorpo');
   const historico     = document.getElementById('terminalHistorico');
   const heroCartao    = document.getElementById('heroCartao');
@@ -15,8 +14,6 @@
   const entrada       = document.getElementById('terminalEntrada');
   const cursorEntrada = document.getElementById('cursorEntrada');
   const dica          = document.getElementById('terminalDica');
-
-  if (!terminal || !entrada) return;
 
   const movimentoReduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const PROMPT = '<b>italo</b>@cachyos<i>:</i><u>~</u><i>$</i> ';
@@ -330,14 +327,12 @@
     entrada.focus();
   });
 
-  if (dica) {
-    dica.addEventListener('click', (e) => {
-      const botao = e.target.closest('[data-comando]');
-      if (!botao) return;
-      entrada.focus();
-      executar(botao.dataset.comando);
-    });
-  }
+  dica.addEventListener('click', (e) => {
+    const botao = e.target.closest('[data-comando]');
+    if (!botao) return;
+    entrada.focus();
+    executar(botao.dataset.comando);
+  });
 
   /* ---------- boot ---------- */
 
@@ -345,7 +340,7 @@
     bootCursor.classList.add('oculto');
     linhaEntrada.hidden = false;
     linhaEntrada.classList.add('semFoco');
-    if (dica) dica.hidden = false;
+    dica.hidden = false;
     atualizarCursor();
     // fotografia do terminal recém-inicializado, usada pelo `clear`
     estadoInicial = historico.innerHTML;

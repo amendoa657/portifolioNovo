@@ -1,9 +1,9 @@
-/* Menu hambúrguer: abre/fecha, fecha ao navegar, ao clicar fora e no Esc. */
-
+/* Menu hambúrguer: abre/fecha, fecha ao navegar, ao clicar fora e no Esc.
+   Tudo dentro desse (function(){ ... })() fica só neste arquivo — assim
+   um nome como "botao" aqui não conflita com o "botao" de outro arquivo. */
 (function () {
   const botao = document.getElementById('navAlternar');
   const lista = document.getElementById('navLinks');
-  if (!botao || !lista) return;
 
   function fechar() {
     botao.classList.remove('aberto');
@@ -23,16 +23,15 @@
 
   lista.querySelectorAll('a').forEach(link => link.addEventListener('click', fechar));
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && lista.classList.contains('aberto')) {
+  document.addEventListener('keydown', (evento) => {
+    if (evento.key === 'Escape' && lista.classList.contains('aberto')) {
       fechar();
       botao.focus();
     }
   });
 
-  document.addEventListener('click', (e) => {
-    if (!lista.classList.contains('aberto')) return;
-    if (e.target.closest('.navInterna')) return;
-    fechar();
+  document.addEventListener('click', (evento) => {
+    const cliqueForaDoMenu = !evento.target.closest('.navInterna');
+    if (lista.classList.contains('aberto') && cliqueForaDoMenu) fechar();
   });
 })();

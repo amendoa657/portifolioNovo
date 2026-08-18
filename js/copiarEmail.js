@@ -1,60 +1,43 @@
-/* Copia o e-mail para a área de transferência com retorno visual.
-   A API moderna só funciona em contexto seguro e com gesto do usuário —
-   quando ela falha (e não só quando falta), caímos no método antigo. */
-
+/* Copia o e-mail pro clipboard com retorno visual no botão.
+   O método moderno (navigator.clipboard) não funciona em todo navegador,
+   então se ele falhar caímos no método antigo (selecionar texto + copy). */
 (function () {
   const botao = document.getElementById('botaoCopiar');
-  if (!botao) return;
-
   const textoOriginal = botao.textContent.trim();
-  let temporizador;
 
-  function copiarAntigo(valor) {
+  function copiarComTextarea(valor) {
     const campo = document.createElement('textarea');
     campo.value = valor;
-    campo.setAttribute('readonly', '');
     campo.style.position = 'fixed';
-    campo.style.top = '0';
     campo.style.opacity = '0';
     document.body.appendChild(campo);
     campo.select();
-    campo.setSelectionRange(0, valor.length);
-
-    let deuCerto = false;
-    try {
-      deuCerto = document.execCommand('copy');
-    } catch {
-      deuCerto = false;
-    }
+    const deuCerto = document.execCommand('copy');
     campo.remove();
     return deuCerto;
   }
 
   async function copiar(valor) {
-    if (navigator.clipboard?.writeText) {
+    if (navigator.clipboard) {
       try {
         await navigator.clipboard.writeText(valor);
         return true;
       } catch {
-        /* segue para o método antigo */
+        // segue para o método antigo abaixo
       }
     }
-    return copiarAntigo(valor);
-  }
-
-  function avisar(texto, classe) {
-    botao.textContent = texto;
-    botao.classList.toggle('copiado', classe === 'copiado');
-    clearTimeout(temporizador);
-    temporizador = setTimeout(() => {
-      botao.textContent = textoOriginal;
-      botao.classList.remove('copiado');
-    }, 2000);
+    return copiarComTextarea(valor);
   }
 
   botao.addEventListener('click', async () => {
-    const ok = await copiar(botao.dataset.valor);
-    // se nem o método antigo funcionar, o e-mail continua visível e selecionável ao lado
-    avisar(ok ? 'copiado ✓' : 'selecione e copie', ok ? 'copiado' : '');
+    const deuCerto = await copiar(botao.dataset.valor);
+
+    botao.textContent = deuCerto ? 'copiado ✓' : 'selecione e copie';
+    botao.classList.toggle('copiado', deuCerto);
+
+    setTimeout(() => {
+      botao.textContent = textoOriginal;
+      botao.classList.remove('copiado');
+    }, 2000);
   });
 })();
