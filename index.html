@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Italo Cunha — game dev &amp; back-end</title>
+
+<meta name="description" content="Italo Cunha, desenvolvedor. Jogos na Godot, back-end em Flask e Laravel, Linux como ambiente de trabalho. Projetos, stack e contato.">
+<meta name="author" content="Italo Cunha">
+<meta name="theme-color" content="#0b0e12">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Italo Cunha — game dev &amp; back-end">
+<meta property="og:description" content="Jogos na Godot, back-end em Flask e Laravel, Linux como ambiente de trabalho.">
+<meta name="twitter:card" content="summary">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b0e12'/%3E%3Ctext x='50' y='70' font-size='58' text-anchor='middle' fill='%23ffb454' font-family='monospace' font-weight='bold'%3E%3E_%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<a class="linkPular" href="#principal">Pular para o conteúdo</a>
+
+<nav class="navBarra">
+  <div class="navInterna">
+    <a href="#topo" class="navLogo" aria-label="Início">
+      <span class="navLogoPrompt">~/</span>italo
+    </a>
+
+    <ul class="navLinks" id="navLinks">
+      <li><a href="#sobre">sobre</a></li>
+      <li><a href="#trajetoria">trajetória</a></li>
+      <li><a href="#stack">stack</a></li>
+      <li><a href="#projetos">projetos</a></li>
+      <li><a href="#contato">contato</a></li>
+    </ul>
+
+    <button class="navAlternar" id="navAlternar" aria-label="Abrir menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="navProgresso" id="navProgresso"></div>
+</nav>
+
+<header class="heroi" id="topo">
+  <div class="contentor">
+
+    <div class="terminal" id="terminal">
+      <div class="terminalBarra">
+        <span class="terminalPonto vermelho"></span>
+        <span class="terminalPonto amarelo"></span>
+        <span class="terminalPonto verde"></span>
+        <span class="terminalTitulo">italo@cachyos &nbsp;—&nbsp; fish &nbsp;—&nbsp; 96×28</span>
+      </div>
+
+      <div class="terminalCorpo" id="terminalCorpo">
+        <div class="terminalHistorico" id="terminalHistorico" role="log" aria-live="polite" aria-label="Saída do terminal">
+
+          <div class="terminalLinha">
+            <span class="terminalPrompt" aria-hidden="true"><b>italo</b>@cachyos<i>:</i><u>~</u><i>$</i></span>
+            <span id="bootComando"></span><span class="cursorBloco" id="bootCursor"></span>
+          </div>
+
+          <div class="heroCartao" id="heroCartao">
+            <h1 class="heroNome">Italo <span class="destaque">Cunha</span></h1>
+            <p class="heroFuncao">
+              Desenvolvedor de jogos <span class="separador">·</span> back-end <span class="separador">·</span> programação competitiva
+            </p>
+            <p class="heroResumo">
+              Faço jogos na Godot desde antes de saber o que era um bom código. Hoje divido o
+              tempo entre engine, servidor e C++ resolvendo problema de olimpíada.
+            </p>
+            <div class="heroAcoes">
+              <a href="#projetos" class="botao botaoPrimario">ver projetos</a>
+              <a href="https://github.com/amendoa657" target="_blank" rel="noopener" class="botao botaoFantasma">github</a>
+            </div>
+          </div>
+
+        </div>
+
+        <form class="terminalEntradaLinha" id="terminalEntradaLinha" hidden autocomplete="off">
+          <span class="terminalPrompt" aria-hidden="true">
+            <b>italo</b>@cachyos<i>:</i><u>~</u><i>$</i>
+          </span>
+          <span class="terminalCampo">
+            <input
+              id="terminalEntrada"
+              type="text"
+              aria-label="Digite um comando. Use help para ver a lista."
+              autocomplete="off"
+              autocapitalize="off"
+              autocorrect="off"
+              spellcheck="false"
+              enterkeyhint="go">
+            <span class="cursorBloco cursorEntrada" id="cursorEntrada" aria-hidden="true"></span>
+          </span>
+        </form>
+      </div>
+    </div>
+
+    <p class="terminalDica" id="terminalDica" hidden>
+      terminal de verdade — digite <code>help</code>, ou
+      <button type="button" class="dicaComando" data-comando="help">clique aqui</button>
+    </p>
+
+  </div>
+
+  <div class="dicaRolagem" aria-hidden="true">
+    <span class="barra"></span>
+  </div>
+</header>
+
+<main id="principal">
+
+  <!-- ============ SOBRE ============ -->
+  <section class="secao" id="sobre">
+    <div class="contentor">
+      <header class="secaoCabecalho revelar">
+        <span class="secaoNumero">01</span>
+        <h2 class="secaoTitulo">Sobre</h2>
+        <span class="secaoRegua"></span>
+        <span class="secaoComando">cat sobre.md</span>
+      </header>
+
+      <div class="sobreGrade">
+        <div class="sobreTexto revelar">
+          <p>
+            Comecei a programar querendo fazer jogo. Em 2019 fiz um no GameMaker que era
+            sinceramente ruim, e anos depois refiz o mesmo jogo na Godot só pra medir o quanto
+            eu tinha mudado. Foi o projeto que mais me ensinou até hoje.
+          </p>
+          <p>
+            Agora o tempo se divide em três frentes. Na Godot eu escrevo GDScript e C#. No
+            back-end, Flask quando é Python e Laravel quando é PHP. E desde 2024 tem C++, que
+            começou como curiosidade sobre o que acontece por baixo e virou programação
+            competitiva — faço a OBI todo ano desde 2025.
+          </p>
+          <p>
+            Competitiva mudou o jeito que eu escrevo código. Quando o limite é um segundo,
+            você para de perguntar se funciona e passa a perguntar quanto custa. Isso vazou
+            pro resto: hoje penso em complexidade antes de pensar em sintaxe.
+          </p>
+          <p>
+            Uso Linux como sistema principal desde 2021 e passo boa parte do dia no terminal.
+            Não é pose: ferramenta pequena que faz uma coisa bem encaixa melhor no meu jeito de
+            trabalhar do que interface grande que faz tudo mais ou menos.
+          </p>
+          <p>
+            Aprendo construindo. O raycasting em Python nasceu de querer entender como o
+            Wolfenstein 3D fazia 3D sem ter 3D. O programa de criptografia veio de uma aula de
+            matriz que eu levei longe demais.
+          </p>
+        </div>
+
+        <aside class="neofetch revelar" aria-label="Ambiente de trabalho">
+          <pre class="neofetchArte" aria-hidden="true">    .--.
+   |o_o |
+   |:_/ |
+  //   \ \
+ (|     | )
+/'\_   _/`\
+\___)=(___/</pre>
+
+          <div class="neofetchDados">
+            <p class="neofetchTitulo"><b>italo</b>@<b>cachyos</b></p>
+            <div class="neofetchRegua" aria-hidden="true"></div>
+
+            <dl class="neofetchInfo">
+              <div class="neofetchLinha" style="--cor:var(--vermelho)">
+                <dt>
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="9" rx="1.2"/><path d="M5.5 14h5M8 11.5V14"/></svg>
+                  <span class="acessivelOculto">Distribuição</span>
+                </dt>
+                <dd>CachyOS x86_64</dd>
+              </div>
+
+              <div class="neofetchLinha" style="--cor:var(--ambarFixo)">
+                <dt>
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4.5" y="4.5" width="7" height="7" rx="1"/><path d="M6.5 1.5v3M9.5 1.5v3M6.5 11.5v3M9.5 11.5v3M1.5 6.5h3M1.5 9.5h3M11.5 6.5h3M11.5 9.5h3"/></svg>
+                  <span class="acessivelOculto">Kernel</span>
+                </dt>
+                <dd>linux-cachyos</dd>
+              </div>
+
+              <div class="neofetchLinha" style="--cor:var(--verde)">
+                <dt>
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 14.5 5v6L8 14.5 1.5 11V5z"/><path d="M1.5 5 8 8.5 14.5 5M8 8.5v6"/></svg>
+                  <span class="acessivelOculto">Pacotes</span>
+                </dt>
+                <dd>pacman</dd>
+              </div>
+
+              <div class="neofetchLinha" style="--cor:var(--roxo)">
+                <dt>
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path d="M4.5 6.5 6.5 8l-2 1.5M8.5 10h3"/></svg>
+                  <span class="acessivelOculto">Shell</span>
+                </dt>
+                <dd>fish</dd>
+              </div>
+
+              <div class="neofetchLinha" style="--cor:var(--ciano)">
+                <dt>
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path d="M1.5 6h13"/></svg>
+                  <span class="acessivelOculto">Gerenciador de janelas</span>
+                </dt>
+                <dd>Hyprland <span class="neofetchNota">(rice própria)</span></dd>
+              </div>
+
+              <div class="neofetchLinha" style="--cor:var(--texto)">
+                <dt>
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 1.5"/></svg>
+                  <span class="acessivelOculto">Tempo de atividade</span>
+                </dt>
+                <dd>programando desde 2019</dd>
+              </div>
+            </dl>
+
+            <div class="neofetchPaleta" role="group" aria-label="Cor de destaque do site">
+              <button type="button" class="neofetchCor" data-cor="#ff7b72" style="--cor:#ff7b72" aria-label="Vermelho"></button>
+              <button type="button" class="neofetchCor" data-cor="#7fd88f" style="--cor:#7fd88f" aria-label="Verde"></button>
+              <button type="button" class="neofetchCor" data-cor="#ffb454" style="--cor:#ffb454" aria-label="Âmbar (padrão)"></button>
+              <button type="button" class="neofetchCor" data-cor="#6cb6ff" style="--cor:#6cb6ff" aria-label="Azul"></button>
+              <button type="button" class="neofetchCor" data-cor="#b083f0" style="--cor:#b083f0" aria-label="Roxo"></button>
+              <button type="button" class="neofetchCor" data-cor="#56d4dd" style="--cor:#56d4dd" aria-label="Ciano"></button>
+              <button type="button" class="neofetchCor" data-cor="#d5dce4" style="--cor:#d5dce4" aria-label="Branco"></button>
+            </div>
+            <p class="neofetchDicaCor">clique para trocar a cor do site</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRAJETÓRIA ============ -->
+  <section class="secao" id="trajetoria">
+    <div class="contentor">
+      <header class="secaoCabecalho revelar">
+        <span class="secaoNumero">02</span>
+        <h2 class="secaoTitulo">Trajetória</h2>
+        <span class="secaoRegua"></span>
+        <span class="secaoComando">git log --reverse</span>
+      </header>
+
+      <div class="trajetoriaGrade">
+        <ol class="linhaTempo" id="linhaTempo">
+        <li class="linhaTempoItem revelar" data-img="img/2019.svg" data-legenda="2019 — primeiro contato">
+          <button type="button" class="linhaTempoAno" aria-pressed="false" aria-label="Ver imagem de 2019" aria-controls="trajetoriaPainel">2019</button>
+          <div class="linhaTempoCorpo">
+            <h3 class="linhaTempoTitulo">primeiro contato</h3>
+            <p>
+              5º ano, GameMaker Studio 2. Fazia jogo antes de saber o que era lógica de
+              programação — e um deles virou o Zé Gotinha, que eu refaria anos depois.
+            </p>
+          </div>
+        </li>
+
+        <li class="linhaTempoItem revelar" data-img="img/2021.svg" data-legenda="2021 — hello, linux">
+          <button type="button" class="linhaTempoAno" aria-pressed="false" aria-label="Ver imagem de 2021" aria-controls="trajetoriaPainel">2021</button>
+          <div class="linhaTempoCorpo">
+            <h3 class="linhaTempoTitulo">hello, linux</h3>
+            <p>
+              Instalei Ubuntu por curiosidade e foi meu primeiro contato com Linux. Virou meu
+              sistema principal e nunca mais voltei atrás.
+            </p>
+          </div>
+        </li>
+
+        <li class="linhaTempoItem revelar" data-img="img/2022.svg" data-legenda="2022 — migrando pro arch">
+          <button type="button" class="linhaTempoAno" aria-pressed="false" aria-label="Ver imagem de 2022" aria-controls="trajetoriaPainel">2022</button>
+          <div class="linhaTempoCorpo">
+            <h3 class="linhaTempoTitulo">migrando pro arch</h3>
+            <p>
+              Troquei o Ubuntu pelo Artix e caí de vez no mundo Arch. De lá pra cá nunca mais saí.
+            </p>
+          </div>
+        </li>
+
+        <li class="linhaTempoItem revelar" data-img="img/2023.svg" data-legenda="2023 — godot">
+          <button type="button" class="linhaTempoAno" aria-pressed="false" aria-label="Ver imagem de 2023" aria-controls="trajetoriaPainel">2023</button>
+          <div class="linhaTempoCorpo">
+            <h3 class="linhaTempoTitulo">godot</h3>
+            <p>
+              Primeiro contato com a engine. Comecei o Zé Gotinha Adventures refazendo, numa
+              ferramenta de verdade, o jogo que eu tinha feito aos 10 anos.
+            </p>
+          </div>
+        </li>
+
+        <li class="linhaTempoItem revelar" data-img="img/2024.svg" data-legenda="2024 — c++ e lógica">
+          <button type="button" class="linhaTempoAno" aria-pressed="false" aria-label="Ver imagem de 2024" aria-controls="trajetoriaPainel">2024</button>
+          <div class="linhaTempoCorpo">
+            <h3 class="linhaTempoTitulo">c++ e lógica</h3>
+            <p>
+              Comecei a aprender C++ e lógica de programação mais avançada. Foi quando parei de
+              só fazer funcionar e comecei a olhar para como funciona.
+            </p>
+          </div>
+        </li>
+
+        <li class="linhaTempoItem revelar" data-img="img/2025.svg" data-legenda="2025 — primeira OBI">
+          <button type="button" class="linhaTempoAno" aria-pressed="false" aria-label="Ver imagem de 2025" aria-controls="trajetoriaPainel">2025</button>
+          <div class="linhaTempoCorpo">
+            <h3 class="linhaTempoTitulo">primeira OBI</h3>
+            <p>
+              Minha primeira Olimpíada Brasileira de Informática, e o ano em que passei a estudar
+              programação competitiva pra valer. Faço a prova todo ano desde então.
+            </p>
+          </div>
+        </li>
+
+        <li class="linhaTempoItem linhaTempoAtual revelar" data-img="img/hoje.svg" data-legenda="hoje — HEAD">
+          <button type="button" class="linhaTempoAno" aria-pressed="false" aria-label="Ver imagem de hoje" aria-controls="trajetoriaPainel">hoje</button>
+          <div class="linhaTempoCorpo">
+            <h3 class="linhaTempoTitulo">
+              HEAD <span class="linhaTempoRef">→ main</span>
+            </h3>
+            <p>
+              CachyOS com Hyprland numa rice minha. Competitiva em C++, jogos na Godot e back-end
+              acontecendo ao mesmo tempo — e nenhum dos três atrapalhando o outro.
+            </p>
+          </div>
+        </li>
+        </ol>
+
+        <aside class="trajetoriaPainel" id="trajetoriaPainel">
+          <figure class="painelFigura">
+            <div class="painelMoldura">
+              <img class="painelImagem" id="painelImagem"
+                   src="img/2019.svg" alt="2019 — primeiro contato"
+                   width="1600" height="900" loading="lazy" decoding="async">
+              <span class="painelVarredura" id="painelVarredura" aria-hidden="true"></span>
+            </div>
+            <figcaption class="painelLegenda" id="painelLegenda">
+              <span class="painelPrompt" aria-hidden="true">$</span>
+              <span id="painelTexto">2019 — primeiro contato</span>
+            </figcaption>
+          </figure>
+          <p class="painelDica">clique num ano da linha do tempo</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STACK ============ -->
+  <section class="secao" id="stack">
+    <div class="contentor">
+      <header class="secaoCabecalho revelar">
+        <span class="secaoNumero">03</span>
+        <h2 class="secaoTitulo">Stack</h2>
+        <span class="secaoRegua"></span>
+        <span class="secaoComando">tree ~/stack</span>
+      </header>
+
+      <p class="secaoIntro revelar">
+        Onde cada coisa realmente aparece no meu dia —
+        <span class="legendaChip"><span class="chip chipPrincipal">destacado</span> é o que uso com frequência</span>.
+      </p>
+
+      <div class="stackGrade">
+        <article class="stackCartao revelar">
+          <h3 class="stackCaminho">~/competitiva</h3>
+          <p class="stackNota">OBI todo ano desde 2025. Onde eu aprendi a pensar em custo.</p>
+          <ul class="stackChips">
+            <li class="chip chipPrincipal">C++</li>
+            <li class="chip chipPrincipal">algoritmos</li>
+            <li class="chip chipPrincipal">estruturas de dados</li>
+            <li class="chip">STL</li>
+            <li class="chip">matemática</li>
+          </ul>
+        </article>
+
+        <article class="stackCartao revelar">
+          <h3 class="stackCaminho">~/gamedev</h3>
+          <p class="stackNota">Onde tudo começou. Godot é onde passo mais tempo.</p>
+          <ul class="stackChips">
+            <li class="chip chipPrincipal">Godot</li>
+            <li class="chip chipPrincipal">GDScript</li>
+            <li class="chip">C#</li>
+            <li class="chip">Pygame</li>
+            <li class="chip">GameMaker</li>
+          </ul>
+        </article>
+
+        <article class="stackCartao revelar">
+          <h3 class="stackCaminho">~/web</h3>
+          <p class="stackNota">Back-end é onde me sinto em casa, mas encaro o front sem drama.</p>
+          <ul class="stackChips">
+            <li class="chip chipPrincipal">Flask</li>
+            <li class="chip chipPrincipal">Python</li>
+            <li class="chip chipPrincipal">SQL</li>
+            <li class="chip">Laravel</li>
+            <li class="chip">PHP</li>
+            <li class="chip">JavaScript</li>
+            <li class="chip">SQLAlchemy</li>
+          </ul>
+        </article>
+
+        <article class="stackCartao revelar">
+          <h3 class="stackCaminho">~/sistema</h3>
+          <p class="stackNota">Ambiente de trabalho, não hobby. Quase tudo passa por aqui.</p>
+          <ul class="stackChips">
+            <li class="chip chipPrincipal">Linux</li>
+            <li class="chip chipPrincipal">Bash</li>
+            <li class="chip chipPrincipal">Git</li>
+            <li class="chip">Hyprland</li>
+            <li class="chip">C</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROJETOS ============ -->
+  <section class="secao" id="projetos">
+    <div class="contentor">
+      <header class="secaoCabecalho revelar">
+        <span class="secaoNumero">04</span>
+        <h2 class="secaoTitulo">Projetos</h2>
+        <span class="secaoRegua"></span>
+        <span class="secaoComando">ls ~/projetos</span>
+      </header>
+
+      <!-- destaque -->
+      <article class="projetoCartao projetoDestaque revelar">
+        <div class="projetoConteudo">
+          <div class="projetoEtiqueta">destaque</div>
+          <h3 class="projetoNome">
+            <a href="https://github.com/amendoa657/ZeGotinhaGame" target="_blank" rel="noopener">
+              Zé Gotinha
+            </a>
+          </h3>
+          <p class="projetoDescricao">
+            Fiz esse jogo em 2019 no GameMaker Studio 2, com 10 anos de idade, e o resultado foi
+            exatamente o que se espera. Anos depois eu lembrei dele e refiz do zero na Godot —
+            não pra lançar, mas pra ver de perto o que tinha mudado no meio do caminho.
+            É o projeto que melhor mostra como eu aprendo: refazendo até entender.
+          </p>
+          <ul class="projetoStack">
+            <li>Godot</li><li>GDScript</li><li>pixel art</li>
+          </ul>
+        </div>
+        <footer class="projetoRodape">
+          <span class="projetoLinguagem">
+            <span class="pontoLinguagem" style="--cor:#355570"></span> GDScript
+          </span>
+          <div class="projetoLinks">
+            <a href="https://github.com/amendoa657/ZeGotinhaGame" class="projetoLink" target="_blank" rel="noopener">
+              código
+            </a>
+          </div>
+        </footer>
+      </article>
+
+      <div class="projetosGrade">
+
+        <article class="projetoCartao revelar">
+          <div class="projetoConteudo">
+            <h3 class="projetoNome">
+              <a href="https://github.com/amendoa657/RaycastingGame" target="_blank" rel="noopener">
+                Raycasting Game
+              </a>
+            </h3>
+            <p class="projetoDescricao">
+              Recriei a técnica do Wolfenstein 3D em Pygame: o mapa é 2D, mas cada coluna da tela
+              é um raio lançado contra a parede, e a distância vira altura. Foi assim que entendi
+              projeção e correção de fisheye sem depender de engine.
+            </p>
+            <ul class="projetoStack"><li>Python</li><li>Pygame</li><li>matemática</li></ul>
+          </div>
+          <footer class="projetoRodape">
+            <span class="projetoLinguagem"><span class="pontoLinguagem" style="--cor:#3572A5"></span> Python</span>
+            <div class="projetoLinks">
+              <a href="https://github.com/amendoa657/RaycastingGame" class="projetoLink" target="_blank" rel="noopener">código</a>
+            </div>
+          </footer>
+        </article>
+
+        <article class="projetoCartao revelar">
+          <div class="projetoConteudo">
+            <h3 class="projetoNome">
+              <a href="https://github.com/amendoa657/AppFlaskManageVaral" target="_blank" rel="noopener">
+                Varal Inteligente
+              </a>
+            </h3>
+            <p class="projetoDescricao">
+              Interface web em Flask para controlar um varal automatizado com ESP32. Diferente dos
+              CRUDs de estudo, esse tinha hardware do outro lado: o que a página manda precisa
+              chegar no microcontrolador e voltar.
+            </p>
+            <ul class="projetoStack"><li>Flask</li><li>Python</li><li>ESP32</li></ul>
+          </div>
+          <footer class="projetoRodape">
+            <span class="projetoLinguagem"><span class="pontoLinguagem" style="--cor:#3572A5"></span> Python</span>
+            <div class="projetoLinks">
+              <a href="https://github.com/amendoa657/AppFlaskManageVaral" class="projetoLink" target="_blank" rel="noopener">código</a>
+            </div>
+          </footer>
+        </article>
+
+        <article class="projetoCartao revelar">
+          <div class="projetoConteudo">
+            <h3 class="projetoNome">
+              <a href="https://github.com/amendoa657/Criptografia" target="_blank" rel="noopener">
+                Criptografia por Matrizes
+              </a>
+            </h3>
+            <p class="projetoDescricao">
+              Cifra escrita em C++ onde a chave é uma matriz: o texto vira vetor numérico e a
+              codificação é multiplicação. Para voltar, precisa da inversa. Saiu de uma aula de
+              álgebra que eu decidi levar até o compilador.
+            </p>
+            <ul class="projetoStack"><li>C++</li><li>álgebra linear</li></ul>
+          </div>
+          <footer class="projetoRodape">
+            <span class="projetoLinguagem"><span class="pontoLinguagem" style="--cor:#f34b7d"></span> C++</span>
+            <div class="projetoLinks">
+              <a href="https://github.com/amendoa657/Criptografia" class="projetoLink" target="_blank" rel="noopener">código</a>
+            </div>
+          </footer>
+        </article>
+
+        <article class="projetoCartao revelar">
+          <div class="projetoConteudo">
+            <h3 class="projetoNome">
+              <a href="https://github.com/amendoa657/sqlAlchemyCrud" target="_blank" rel="noopener">
+                CRUD com SQLAlchemy
+              </a>
+            </h3>
+            <p class="projetoDescricao">
+              Cadastro de alunos com Flask nas rotas e SQLAlchemy modelando as tabelas. É o
+              projeto em que parei de escrever SQL na mão e entendi o que um ORM resolve — e o
+              que ele esconde de você.
+            </p>
+            <ul class="projetoStack"><li>Flask</li><li>SQLAlchemy</li><li>SQLite</li></ul>
+          </div>
+          <footer class="projetoRodape">
+            <span class="projetoLinguagem"><span class="pontoLinguagem" style="--cor:#3572A5"></span> Python</span>
+            <div class="projetoLinks">
+              <a href="https://github.com/amendoa657/sqlAlchemyCrud" class="projetoLink" target="_blank" rel="noopener">código</a>
+            </div>
+          </footer>
+        </article>
+
+        <article class="projetoCartao revelar">
+          <div class="projetoConteudo">
+            <h3 class="projetoNome">
+              <a href="https://github.com/amendoa657/laravelApiRest" target="_blank" rel="noopener">
+                API REST em Laravel
+              </a>
+            </h3>
+            <p class="projetoDescricao">
+              Meu caminho completo dentro do Laravel: rotas, controllers, migrations e Eloquent.
+              Serviu pra sair do PHP em script solto e entender o que um framework opinativo
+              decide por você.
+            </p>
+            <ul class="projetoStack"><li>Laravel</li><li>PHP</li><li>Blade</li></ul>
+          </div>
+          <footer class="projetoRodape">
+            <span class="projetoLinguagem"><span class="pontoLinguagem" style="--cor:#4F5D95"></span> PHP</span>
+            <div class="projetoLinks">
+              <a href="https://github.com/amendoa657/laravelApiRest" class="projetoLink" target="_blank" rel="noopener">código</a>
+            </div>
+          </footer>
+        </article>
+
+        <article class="projetoCartao revelar">
+          <div class="projetoConteudo">
+            <h3 class="projetoNome">
+              <a href="https://github.com/amendoa657/NerdsAdventure" target="_blank" rel="noopener">
+                Nerds Adventure
+              </a>
+              <span class="projetoStatus">em progresso</span>
+            </h3>
+            <p class="projetoDescricao">
+              Ideia de jogo que carrego há alguns anos e que ainda estou construindo na Godot.
+              Está aqui porque portfólio honesto também mostra o que ainda não está pronto.
+            </p>
+            <ul class="projetoStack"><li>Godot</li><li>GDScript</li></ul>
+          </div>
+          <footer class="projetoRodape">
+            <span class="projetoLinguagem"><span class="pontoLinguagem" style="--cor:#355570"></span> GDScript</span>
+            <div class="projetoLinks">
+              <a href="https://github.com/amendoa657/NerdsAdventure" class="projetoLink" target="_blank" rel="noopener">código</a>
+            </div>
+          </footer>
+        </article>
+
+      </div>
+
+      <p class="projetoNota revelar">
+        Tem bastante coisa que não coube aqui, entre experimentos e trabalhos de escola —
+        <a href="https://github.com/amendoa657?tab=repositories" target="_blank" rel="noopener">o resto está no GitHub</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ CONTATO ============ -->
+  <section class="secao secaoContato" id="contato">
+    <div class="contentor">
+      <header class="secaoCabecalho revelar">
+        <span class="secaoNumero">05</span>
+        <h2 class="secaoTitulo">Contato</h2>
+        <span class="secaoRegua"></span>
+        <span class="secaoComando">whois italo</span>
+      </header>
+
+      <div class="contatoCaixa revelar">
+        <p class="contatoChamada">
+          Estou aberto a oportunidades, freela e projeto de jogo com gente que leva a sério.
+          Respondo mais rápido por e-mail.
+        </p>
+
+        <ul class="contatoLista">
+          <li class="contatoItem">
+            <span class="contatoChave">email</span>
+            <a href="mailto:italocisarpinheiro@gmail.com">italocisarpinheiro@gmail.com</a>
+            <button type="button" class="botaoCopiar" id="botaoCopiar" data-valor="italocisarpinheiro@gmail.com">
+              copiar
+            </button>
+          </li>
+          <li class="contatoItem">
+            <span class="contatoChave">github</span>
+            <a href="https://github.com/amendoa657" target="_blank" rel="noopener">github.com/amendoa657</a>
+          </li>
+          <li class="contatoItem">
+            <span class="contatoChave">linkedin</span>
+            <a href="https://www.linkedin.com/in/italo-cunha-028baa356/" target="_blank" rel="noopener">italo-cunha</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="rodape">
+  <div class="contentor rodapeConteudo">
+    <span>© <span id="ano"></span> Italo Cunha</span>
+    <span class="rodapeMeta">escrito à mão em HTML, CSS e JavaScript · sem framework</span>
+  </div>
+</footer>
+
+<button class="voltarTopo" id="voltarTopo" aria-label="Voltar ao topo">
+  <span aria-hidden="true">↑</span>
+</button>
+
+<script src="js/rodape.js" defer></script>
+<script src="js/temaAcento.js" defer></script>
+<script src="js/trajetoriaImagens.js" defer></script>
+<script src="js/simbolosFlutuantes.js" defer></script>
+<script src="js/terminal.js" defer></script>
+<script src="js/menuMobile.js" defer></script>
+<script src="js/navegacaoAtiva.js" defer></script>
+<script src="js/scrollRevelar.js" defer></script>
+<script src="js/progressoScroll.js" defer></script>
+<script src="js/copiarEmail.js" defer></script>
+<script src="js/voltarTopo.js" defer></script>
+
+</body>
+</html>
