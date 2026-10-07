@@ -17,6 +17,8 @@
 
 > Um site pessoal escrito à mão em **HTML, CSS e JavaScript**, sem framework, pensado para parecer um ambiente de trabalho — não um currículo jogado numa página.
 
+🌐 **Versão publicada:** [portifolio.italocisarpinheiro.workers.dev](https://portifolio.italocisarpinheiro.workers.dev/)
+
 ## A ideia
 
 O portfólio apresenta Italo Cunha como desenvolvedor de jogos, back-end, front-end e programação competitiva. A linguagem visual mistura terminal, neofetch, Git e uma interface escura de inspiração Linux:
