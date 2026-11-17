@@ -15,6 +15,7 @@
   function entrarHeroi(atraso = 0) {
     setTimeout(() => {
       if (window.revelarHeroi) revelarHeroi();
+      if (window.iniciarLetreiro) setTimeout(iniciarLetreiro, 500);
       if (window.PixelTexto) PixelTexto.montar(nome, { voo: 780, espalhar: 620 });
     }, atraso);
   }

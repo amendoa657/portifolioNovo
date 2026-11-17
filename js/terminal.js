@@ -34,7 +34,7 @@
   const grade = (pares) => `<div class="grade">${pares.map(([a, b]) => `<span class="chave">${a}</span><span>${b}</span>`).join('')}</div>`;
   const link = (repo) => `<a href="https://github.com/amendoa657/${repo}" target="_blank" rel="noopener">github.com/amendoa657/${repo}</a>`;
 
-  const SECOES = ['inicio', 'sobre', 'evolucao', 'mosaic', 'projetos', 'stack', 'contato'];
+  const SECOES = ['inicio', 'sobre', 'evolucao', 'mosaic', 'os', 'store', 'ui', 'agora', 'projetos', 'stack', 'contato'];
 
   function irParaSecao(id) {
     fechar();
@@ -45,7 +45,7 @@
     help: { d: 'lista os comandos', x: () => grade(Object.entries(comandos).filter(([, c]) => c.d).map(([n, c]) => [n, c.d])) },
     whoami: {
       d: 'quem é o dono desse terminal',
-      x: () => `<b>Italo Cunha</b> — jogos, back-end, C++ e direção de arte.<br>Godot de um lado, Flask e Laravel do outro, competitiva no meio, Linux embaixo de tudo.<br>E a Mosaic por cima: uma identidade com a cara do wallpaper.`,
+      x: () => `<b>Italo Cunha</b> — jogos, back-end, desktop e direção de arte.<br>Godot de um lado, Flask e Delphi do outro, Rust e Go no caminho, Linux embaixo de tudo.<br>E a Mosaic por cima: uma identidade com a cara do wallpaper.`,
     },
     ls: { d: 'lista as seções da página', x: () => SECOES.map((s) => `<span class="chave">${s}/</span>`).join('&nbsp;&nbsp;') },
     cd: {
@@ -63,6 +63,7 @@
       x: () => grade([
         ['store', 'loja de pacotes pro Arch — Flask, pywebview, SQLite FTS5 · ' + link('mosaicStore')],
         ['ui', 'a identidade virou biblioteca — HTML, CSS, JS puro, 0 dependências'],
+        ['os', 'desktop em Quickshell pro Hyprland · cd os'],
         ['os', 'desktop em Quickshell pro Hyprland — ilha líquida, dock de vidro · ' + link('mosaicOS')],
         ['ideal', 'calma, rápida e legível. com a cara do seu wallpaper.'],
       ]),
@@ -71,17 +72,20 @@
       d: 'os projetos, com link',
       x: () => grade([
         ['Mosaic Store', link('mosaicStore')], ['Mosaic OS', link('mosaicOS')], ['IndieSquad', link('indieSquad')],
+        ['HW Atendimento', link('hwAtendimentoDelphi')], ['API Atendimento', link('ApiAtendimento')],
         ['TuxAssist', link('tuxAssist')], ['Zé Gotinha', link('ZeGotinhaGame')], ['Raycasting', link('RaycastingGame')],
-        ['Criptografia', link('Criptografia')], ['Laravel API', link('laravelApiRest')],
+        ['Criptografia', link('Criptografia')],
       ]),
     },
     stack: {
       d: 'o que eu uso no dia a dia',
       x: () => grade([
-        ['gamedev', 'Godot, GDScript, C#, Pygame, GameMaker'],
-        ['web', 'Flask, Python, SQL, CSS, JavaScript, Laravel, PHP'],
-        ['competitiva', 'C++, algoritmos, STL, Java'],
-        ['sistema', 'Linux, QML, Git, Hyprland, Neovim, Matugen'],
+        ['back-end', 'Python, Flask, SQL, Java/Spring — e Go chegando'],
+        ['sistemas', 'Delphi, Object Pascal, C++, Rust (aprendendo)'],
+        ['interface', 'QML, CSS, JavaScript, Matugen'],
+        ['jogos', 'Godot, GDScript, Pygame'],
+        ['sistema', 'Linux, Hyprland, Git, Neovim'],
+        ['não', 'Laravel. nunca mais.'],
       ]),
     },
     trajetoria: {
@@ -89,24 +93,27 @@
       x: () => grade([
         ['2019', 'GameMaker, 5º ano — o primeiro Zé Gotinha'], ['2021', 'Ubuntu, o primeiro Linux'], ['2022', 'Artix, e o mundo Arch de vez'],
         ['2023', 'Godot — o Zé Gotinha refeito'], ['2024', 'C++ e competitiva'], ['2025', 'Amigos Droids, FTC'],
-        ['2026', 'nasce a Mosaic'], ['hoje', '<span class="ok">HEAD</span> — CachyOS + Mosaic OS'],
+        ['2026', 'nasce a Mosaic · HW Atendimento em Delphi'], ['hoje', '<span class="ok">HEAD</span> — Rust compilando, Go na fila'],
       ]),
     },
     neofetch: {
       d: 'informações do ambiente',
       x: () => grade([['host', 'italo@cachyos'], ['os', 'CachyOS x86_64'], ['wm', 'Hyprland + Mosaic OS'], ['shell', 'fish'], ['editor', 'Neovim'], ['uptime', 'programando desde 2019']]),
     },
-    wallpaper: {
-      d: 'troca as cores do site — ex: wallpaper laranja',
+    tema: {
+      d: 'troca cores e formas do site — ex: tema gruvbox',
       x(args) {
-        const nome = (args[0] || '').toLowerCase();
+        const nome = (args[0] || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
         if (!window.Tema) return '<span class="erro">tema indisponível</span>';
-        if (!nome) return `atual: <span class="chave">${Tema.atual()}</span><br>opções: ${Tema.PALETAS.join(', ')}`;
-        if (!Tema.PALETAS.includes(nome)) return `<span class="erro">wallpaper: ${escapar(nome)}: não existe</span><br>opções: ${Tema.PALETAS.join(', ')}`;
+        if (!nome) return `atual: <span class="chave">${Tema.atual()}</span><br>opções: ${Tema.TEMAS.join(', ')}`;
+        if (!Tema.TEMAS.includes(nome)) return `<span class="erro">tema: ${escapar(nome)}: não existe</span><br>opções: ${Tema.TEMAS.join(', ')}`;
         setTimeout(() => Tema.aplicar(nome), 120);
-        return `matugen gerando a paleta <span class="chave">${nome}</span>… <span class="ok">ok</span>`;
+        return `aplicando o tema <span class="chave">${nome}</span>… <span class="ok">ok</span>`;
       },
     },
+    cargo: { d: '', x: () => '<span class="ok">Compiling</span> italo v2026.0.0<br>warning: ainda aprendendo lifetimes. volte em breve.' },
+    go: { d: '', x: () => 'go: na fila. o primeiro serviço sai em breve.' },
+    laravel: { d: '', x: () => '<span class="erro">laravel: comando removido deste sistema por decisão do dono.</span>' },
     contato: {
       d: 'como falar comigo',
       x: () => grade([
@@ -121,7 +128,7 @@
     paru: { d: '', x: (a) => a.join(' ').includes('mosaic') ? ':: resolvendo dependências…<br><span class="ok">mosaic-store</span> já está instalado — e com a cara do seu wallpaper.' : 'use a <span class="chave">Mosaic Store</span>, é mais bonito.' },
     amendoim: { d: '', x: () => '<span class="ok">dependência crítica satisfeita.</span> produtividade +20%.' },
   };
-  const apelidos = { about: 'whoami', sobre: 'whoami', skills: 'stack', projects: 'projetos', repos: 'projetos', contact: 'contato', cls: 'clear', ajuda: 'help', '?': 'help', timeline: 'trajetoria', evolucao: 'trajetoria', tema: 'wallpaper', theme: 'wallpaper', q: 'exit' };
+  const apelidos = { about: 'whoami', sobre: 'whoami', skills: 'stack', projects: 'projetos', repos: 'projetos', contact: 'contato', cls: 'clear', ajuda: 'help', '?': 'help', timeline: 'trajetoria', evolucao: 'trajetoria', wallpaper: 'tema', theme: 'tema', q: 'exit' };
   const nomes = [...Object.keys(comandos), ...Object.keys(apelidos)];
 
   const passados = [];
@@ -155,7 +162,7 @@
         if (op.length === 1) entrada.value = op[0] + ' ';
         else if (op.length > 1) { ecoar(entrada.value); imprimir(op.join('&nbsp;&nbsp;')); }
       } else {
-        const lista = partes[0] === 'cd' ? SECOES : (partes[0] === 'wallpaper' || partes[0] === 'tema') ? (window.Tema ? Tema.PALETAS : []) : [];
+        const lista = partes[0] === 'cd' ? SECOES : (partes[0] === 'wallpaper' || partes[0] === 'tema') ? (window.Tema ? Tema.TEMAS : []) : [];
         const op = lista.filter((n) => n.startsWith(partes[1]));
         if (op.length === 1) entrada.value = partes[0] + ' ' + op[0];
       }
@@ -169,7 +176,7 @@
     painel.showModal();
     if (!saudou) {
       saudou = true;
-      imprimir('bem-vindo ao terminal do portfólio. digite <span class="chave">help</span> — ou tente <span class="chave">wallpaper uva</span>.');
+      imprimir('bem-vindo ao terminal do portfólio. digite <span class="chave">help</span> — ou tente <span class="chave">tema fosforo</span>.');
     }
     setTimeout(() => entrada.focus(), 50);
   }
