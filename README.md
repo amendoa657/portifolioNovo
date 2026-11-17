@@ -2,169 +2,132 @@
 
 # Portfólio — Italo Cunha
 
-### Um portfólio pessoal com estética de terminal, trajetória visual e projetos reais.
+### Jogos, back-end e a Mosaic — num site com a cara do seu wallpaper.
 
-<img src="assetsReadme/portfolio-home.png" alt="Tela inicial do portfólio de Italo Cunha" width="100%">
+<img src="assetsReadme/portfolio-home.webp" alt="Herói do portfólio: o nome em letras grandes, o mascote da Mosaic e o campo de pontos no fundo" width="100%">
+
+🌐 **Versão publicada:** [portifolio.italocisarpinheiro.workers.dev](https://portifolio.italocisarpinheiro.workers.dev/)
 
 <p>
   <a href="#a-ideia">A ideia</a> ·
   <a href="#telas">Telas</a> ·
-  <a href="#interações">Interações</a> ·
+  <a href="#as-animações">Animações</a> ·
+  <a href="#atalhos">Atalhos</a> ·
   <a href="#rodando-localmente">Rodando localmente</a>
 </p>
 
 </div>
 
-> Um site pessoal escrito à mão em **HTML, CSS e JavaScript**, sem framework, pensado para parecer um ambiente de trabalho — não um currículo jogado numa página.
-
-🌐 **Versão publicada:** [portifolio.italocisarpinheiro.workers.dev](https://portifolio.italocisarpinheiro.workers.dev/)
+> Escrito à mão em **HTML, CSS e JavaScript**, sem framework e sem build. A estética é a da **[Mosaic UI](https://github.com/amendoa657/mosaicStore/tree/main/mosaic-ui)**, a identidade visual que eu criei para a Mosaic Store e o Mosaic OS.
 
 ## A ideia
 
-O portfólio apresenta Italo Cunha como desenvolvedor de jogos, back-end, front-end e programação competitiva. A linguagem visual mistura terminal, neofetch, Git e uma interface escura de inspiração Linux:
+A versão anterior era um terminal âmbar. Esta é a mesma pessoa, depois da Mosaic: o site inteiro segue as regras da identidade — **calma, rápida e legível**.
 
-- o herói começa como uma sessão de terminal;
-- a trajetória funciona como um `git log --reverse` visual;
-- a stack aparece como diretórios do sistema;
-- os projetos são tratados como repositórios que merecem contexto;
-- o contato termina como um `whois italo`.
+- **Blocos chapados** nas cores do wallpaper e **teclas que afundam** de verdade (no clique e no teclado);
+- um **campo de pontos** andando atrás de tudo, com uma lente que segue o mouse;
+- a **onda de pixels** em toda troca de tela: navegar, trocar de projeto, avançar na linha do tempo;
+- **o wallpaper troca as cores**: clique no mascote (ou aperte <kbd>W</kbd>) e o site se repinta numa onda;
+- curvas fortes e curtas, nada quica sem motivo, e **movimento reduzido é respeitado**.
 
 ## Telas
 
 <table>
   <tr>
     <td width="50%">
-      <strong>Hero + terminal</strong><br>
-      <sub>Apresentação, links principais e um shell interativo no primeiro quadro.</sub><br><br>
-      <img src="assetsReadme/portfolio-home.png" alt="Hero do portfólio" width="100%">
+      <strong>Evolução</strong><br>
+      <sub>A linha do tempo fica presa na tela e avança com a rolagem, de 2019 até hoje. O ano rola, o texto entra em cascata e a imagem se revela numa onda de pixels.</sub><br><br>
+      <img src="assetsReadme/portfolio-trajectory.webp" alt="Linha do tempo em 2026, com o nascimento da Mosaic" width="100%">
     </td>
     <td width="50%">
-      <strong>Terminal interativo</strong><br>
-      <sub>Comandos como <code>help</code>, <code>ls</code>, <code>stack</code> e <code>cd projetos</code>.</sub><br><br>
-      <img src="assetsReadme/portfolio-terminal.png" alt="Terminal interativo do portfólio" width="100%">
+      <strong>Mosaic</strong><br>
+      <sub>Uma janela de app da Mosaic com Store, UI e OS na lateral. A pílula desliza e o painel novo nasce numa onda que sai do clique.</sub><br><br>
+      <img src="assetsReadme/portfolio-mosaic.webp" alt="A janela do ecossistema Mosaic com a Mosaic Store em destaque" width="100%">
     </td>
   </tr>
   <tr>
-    <td>
-      <strong>Trajetória</strong><br>
-      <sub>Uma linha do tempo de 2019 até hoje com imagem e legenda por etapa.</sub><br><br>
-      <img src="assetsReadme/portfolio-trajectory.png" alt="Linha do tempo do portfólio" width="100%">
-    </td>
     <td>
       <strong>Projetos</strong><br>
-      <sub>Projetos descritos pelo problema, pela tecnologia e pelo que ensinaram.</sub><br><br>
-      <img src="assetsReadme/portfolio-projects.png" alt="Seção de projetos do portfólio" width="100%">
+      <sub>Cada projeto é um "pacote", como na loja. Busca com <kbd>/</kbd> e filtro por área.</sub><br><br>
+      <img src="assetsReadme/portfolio-projects.webp" alt="Grade de projetos em cartões" width="100%">
+    </td>
+    <td>
+      <strong>Terminal</strong><br>
+      <sub>Um shell num painel lateral (<kbd>T</kbd>), com histórico, Tab e um <code>wallpaper</code> que troca as cores do site.</sub><br><br>
+      <img src="assetsReadme/portfolio-terminal.webp" alt="Terminal aberto com o neofetch, na paleta uva" width="100%">
     </td>
   </tr>
   <tr>
-    <td>
+    <td colspan="2">
       <strong>Contato</strong><br>
-      <sub>Links profissionais e botões para copiar e-mail e telefone.</sub><br><br>
-      <img src="assetsReadme/portfolio-contact.png" alt="Seção de contato do portfólio" width="100%">
-    </td>
-    <td valign="top">
-      <strong>Direção visual</strong>
-      <ul>
-        <li>fundo quase preto e superfícies em camadas;</li>
-        <li>JetBrains Mono para a linguagem de terminal;</li>
-        <li>Inter para leitura longa;</li>
-        <li>âmbar como acento padrão;</li>
-        <li>símbolos flutuantes discretos nas margens;</li>
-        <li>animações curtas e respeitosas com reduced motion.</li>
-      </ul>
+      <sub>E-mail e telefone com cópia e aviso flutuante.</sub><br><br>
+      <img src="assetsReadme/portfolio-contact.webp" alt="Seção de contato" width="100%">
     </td>
   </tr>
 </table>
 
-## Interações
+## As animações
 
-### Terminal
-
-O terminal do herói possui histórico, autocompletar com `Tab`, histórico com as setas e comandos próprios:
-
-| Comando | O que faz |
+| O quê | Como |
 | --- | --- |
-| `help` | Mostra os comandos disponíveis |
-| `whoami` | Apresenta o desenvolvedor |
-| `ls` | Lista as seções do site |
-| `cd projetos` | Navega até uma seção |
-| `stack` | Mostra as tecnologias do dia a dia |
-| `projetos` | Lista os repositórios principais |
-| `trajetoria` | Resume a linha do tempo |
-| `neofetch` | Mostra o ambiente de trabalho |
-| `clear` | Restaura o estado inicial do terminal |
+| **Abertura** | Como a da Mosaic Store: a janela nasce coberta com a marca girando um quarto por vez, e a página se revela numa onda que sai dela. Uma vez por sessão; clique ou tecla pula. |
+| **Nome em pixels** | O texto é desenhado num canvas, amostrado numa grade, e cada célula voa até o lugar na cor de uma das ondas do campo. Os títulos das seções fazem o mesmo quando entram na tela. |
+| **Campo de pontos** | A mesma conta do `pixels-worker.js` da Mosaic UI: três ondas, uma por cor do tema; em cada célula vence a mais forte. Trigonometria por linha e por coluna (soma de arcos) e só as células que mudaram são redesenhadas. 30 qps parado, taxa da tela com o mouse mexendo, para quando a aba some. |
+| **Onda de pixels** | Revelar (a área nasce coberta e cada célula encolhe a partir da origem) e cobrir (o contrário). Usada na navegação, na troca de wallpaper, na janela da Mosaic, na linha do tempo e nos temas do Mosaic OS. |
+| **Mascote** | A marca viva do Mosaic OS: quatro blocos com olhos que seguem o mouse, piscam, e giram um quarto de volta trocando o wallpaper. |
+| **Teclas** | Borda de baixo mais escura que some ao apertar. Os atalhos de teclado afundam a tecla da tela antes de agir. |
 
-### Trajetória visual
+## Atalhos
 
-Cada ano é um botão acessível. Ao selecionar uma etapa, o painel lateral troca a imagem, atualiza a legenda e executa uma animação de varredura. Em telas menores, o painel é movido para perto do item selecionado.
-
-### Tema e navegação
-
-- A cor de acento pode ser trocada no bloco de ambiente, inspirado em um neofetch.
-- A escolha fica salva no `localStorage` e volta no próximo acesso.
-- A navegação marca a seção visível durante o scroll.
-- A barra superior mostra o progresso de leitura.
-- O menu mobile abre com botão hambúrguer, fecha ao navegar e responde a `Esc`.
-- O conteúdo respeita `prefers-reduced-motion`.
+| Tecla | O que faz |
+| --- | --- |
+| <kbd>1</kbd>–<kbd>6</kbd> | vai para a seção, numa onda de pixels |
+| <kbd>Enter</kbd> / <kbd>P</kbd> / <kbd>G</kbd> | Mosaic / projetos / GitHub |
+| <kbd>W</kbd> | troca o wallpaper (as cores do site) |
+| <kbd>/</kbd> | busca nos projetos |
+| <kbd>T</kbd> | abre o terminal |
+| <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> | aperta as teclas do pilar da Mosaic |
+| <kbd>←</kbd> <kbd>→</kbd> | anda na linha do tempo (quando ela está na tela) |
 
 ## Estrutura
 
 ```text
 .
-├── index.html                 # Conteúdo e estrutura da página
-├── style.css                  # Tokens, layout, responsividade e animações
-├── img/                       # Imagens da trajetória e projetos
-├── assetsReadme/              # Capturas usadas nesta documentação
+├── index.html            # conteúdo e estrutura
+├── style.css             # tokens da Mosaic UI, componentes, layout e movimento
+├── fontes/               # Space Grotesk e JetBrains Mono (SIL OFL 1.1)
+├── img/                  # imagens da linha do tempo
+├── midia/                # vídeos e capturas da Mosaic, do Mosaic OS e dos projetos
+├── assetsReadme/         # capturas deste README
 └── js/
-    ├── terminal.js            # Shell interativo do herói
-    ├── trajetoriaImagens.js   # Timeline e painel de imagens
-    ├── temaAcento.js          # Paleta persistente
-    ├── navegacaoAtiva.js      # Seção ativa no menu
-    ├── scrollRevelar.js       # Entrada dos blocos no scroll
-    ├── progressoScroll.js     # Progresso de leitura
-    ├── menuMobile.js          # Menu responsivo
-    ├── copiarEmail.js         # Feedback dos botões de cópia
-    ├── simbolosFlutuantes.js  # Glifos decorativos laterais
-    ├── voltarTopo.js           # Atalho para o topo
-    └── rodape.js               # Ano dinâmico do rodapé
+    ├── pixels.js         # campo de pontos e onda de pixels
+    ├── tema.js           # paletas ("wallpaper") e a troca em onda
+    ├── pixelTexto.js     # títulos que se montam em pixels
+    ├── interface.js      # navegação, atalhos, avisos, mascote, pilares, stack e projetos
+    ├── evolucao.js       # a linha do tempo presa na tela
+    ├── ecossistema.js    # a janela da Mosaic e os vídeos sob demanda
+    ├── terminal.js       # o shell do painel lateral
+    └── abertura.js       # a abertura
 ```
-
-## Projetos apresentados
-
-- [Zé Gotinha](https://github.com/amendoa657/ZeGotinhaGame) — jogo na Godot e projeto de evolução pessoal.
-- [Raycasting Game](https://github.com/amendoa657/RaycastingGame) — raycasting em Python/Pygame.
-- [Site Grid](https://github.com/amendoa657/SiteGrid) — experiências com Grid, CSS e animações.
-- [Criptografia por Matrizes](https://github.com/amendoa657/Criptografia) — C++ e álgebra linear.
-- [CRUD com SQLAlchemy](https://github.com/amendoa657/sqlAlchemyCrud) — Flask, ORM e SQLite.
-- [API REST em Laravel](https://github.com/amendoa657/laravelApiRest) — rotas, controllers, migrations e Eloquent.
-- [Nerds Adventure](https://github.com/amendoa657/NerdsAdventure) — jogo em desenvolvimento na Godot.
 
 ## Rodando localmente
 
-Como é um site estático, basta servir a pasta com qualquer servidor HTTP local:
-
 ```bash
-git clone https://github.com/amendoa657/portifolio.git
-cd portifolio
-python3 -m http.server 8000
+git clone https://github.com/amendoa657/portifolioNovo.git
 ```
 
-Depois, abra [`http://localhost:8000`](http://localhost:8000) no navegador.
+```bash
+cd portifolioNovo && python3 -m http.server 8000
+```
 
-Também é possível abrir o `index.html` diretamente, mas um servidor local é recomendado para testar o comportamento de todos os assets e scripts.
+Depois, abra [`http://localhost:8000`](http://localhost:8000). Abrir o `index.html` direto também funciona.
 
-## Stack
+## Compatibilidade
 
-| Camada | Tecnologia |
-| --- | --- |
-| Estrutura | HTML5 semântico |
-| Estilo | CSS moderno, Grid, `color-mix`, responsividade |
-| Interações | JavaScript vanilla |
-| Tipografia | Inter + JetBrains Mono |
-| Deploy | Qualquer hospedagem de site estático |
+Feito para Chromium 114+ e Firefox 125+ (usa `color-mix()`, `overflow: clip`, `<dialog>` e canvas). Sem JavaScript, o conteúdo aparece inteiro, sem as animações. Com `prefers-reduced-motion`, não há abertura, o campo fica parado e as ondas viram troca direta.
 
-## Créditos e estado
+## Créditos
 
-Este portfólio é uma peça viva: a trajetória, os projetos e a paleta mudam conforme o ambiente e o trabalho mudam.
-
-O repositório não possuía um README anterior; esta é a primeira documentação formal do projeto.
+- A estética, o mascote e o algoritmo dos pixels vêm da [Mosaic UI](https://github.com/amendoa657/mosaicStore/tree/main/mosaic-ui) e do [Mosaic OS](https://github.com/amendoa657/mosaicOS), projetos meus.
+- Space Grotesk e JetBrains Mono, SIL Open Font License 1.1 (licenças em `fontes/`).
+- Sobre o uso de IA: a direção de arte, as paletas, os layouts e o conteúdo são meus; boa parte do código foi escrita com a ajuda de IA.

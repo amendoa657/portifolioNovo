@@ -1,372 +1,185 @@
 /* =========================================================================
-   Terminal interativo do herói.
-   Faz o boot animado (whoami -> cartão de apresentação) e depois entrega
-   um shell de verdade: histórico, autocompletar com Tab e alguns comandos.
+   Terminal: um shell de verdade num painel que desliza da direita.
+   Histórico com as setas, autocompletar com Tab e comandos próprios —
+   inclusive um que troca o wallpaper do site.
    ========================================================================= */
 
 (function () {
-  const corpo         = document.getElementById('terminalCorpo');
-  const historico     = document.getElementById('terminalHistorico');
-  const heroCartao    = document.getElementById('heroCartao');
-  const bootComando   = document.getElementById('bootComando');
-  const bootCursor    = document.getElementById('bootCursor');
-  const linhaEntrada  = document.getElementById('terminalEntradaLinha');
-  const entrada       = document.getElementById('terminalEntrada');
-  const cursorEntrada = document.getElementById('cursorEntrada');
-  const dica          = document.getElementById('terminalDica');
+  'use strict';
 
-  const movimentoReduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const PROMPT = '<b>italo</b>@cachyos<i>:</i><u>~</u><i>$</i> ';
+  const painel = document.getElementById('terminal');
+  const corpo = document.getElementById('terminalCorpo');
+  const historico = document.getElementById('terminalHistorico');
+  const form = document.getElementById('terminalForm');
+  const entrada = document.getElementById('terminalEntrada');
+  const abrirBotao = document.getElementById('abrirTerminal');
+  const fecharBotao = document.getElementById('fecharTerminal');
+  const PROMPT = '<span class="prompt"><b>italo</b>@cachyos<i>:</i><u>~</u><i>$</i></span> ';
 
-  /* ---------- utilidades ---------- */
-
-  function escapar(texto) {
-    const div = document.createElement('div');
-    div.textContent = texto;
-    return div.innerHTML;
+  const escapar = (t) => { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; };
+  const rolar = () => { corpo.scrollTop = corpo.scrollHeight; };
+  function imprimir(html) {
+    const b = document.createElement('div');
+    b.className = 'saida';
+    b.innerHTML = html;
+    historico.appendChild(b);
+    rolar();
   }
-
-  function rolarParaFim() {
-    corpo.scrollTop = corpo.scrollHeight;
+  function ecoar(texto) {
+    const l = document.createElement('div');
+    l.className = 'linha';
+    l.innerHTML = PROMPT + escapar(texto);
+    historico.appendChild(l);
   }
+  const grade = (pares) => `<div class="grade">${pares.map(([a, b]) => `<span class="chave">${a}</span><span>${b}</span>`).join('')}</div>`;
+  const link = (repo) => `<a href="https://github.com/amendoa657/${repo}" target="_blank" rel="noopener">github.com/amendoa657/${repo}</a>`;
 
-  function imprimir(html, classe = 'terminalSaida') {
-    const bloco = document.createElement('div');
-    bloco.className = classe;
-    bloco.innerHTML = html;
-    historico.appendChild(bloco);
-    rolarParaFim();
-    return bloco;
+  const SECOES = ['inicio', 'sobre', 'evolucao', 'mosaic', 'projetos', 'stack', 'contato'];
+
+  function irParaSecao(id) {
+    fechar();
+    setTimeout(() => window.irPara && irPara('#' + id), 300);
   }
-
-  function ecoarComando(texto) {
-    const linha = document.createElement('div');
-    linha.className = 'terminalLinha';
-    linha.innerHTML = `<span class="terminalPrompt">${PROMPT}</span>${escapar(texto)}`;
-    historico.appendChild(linha);
-  }
-
-  /* ---------- comandos ---------- */
-
-  const secoes = ['sobre', 'trajetoria', 'stack', 'projetos', 'contato'];
-
-  const projetos = [
-    ['Zé Gotinha',        'Godot',   'ZeGotinhaGame'],
-    ['Raycasting Game',   'Python',  'RaycastingGame'],
-    ['Varal Inteligente', 'Flask',   'AppFlaskManageVaral'],
-    ['Criptografia',      'C++',     'Criptografia'],
-    ['CRUD SQLAlchemy',   'Flask',   'sqlAlchemyCrud'],
-    ['API REST',          'Laravel', 'laravelApiRest'],
-  ];
 
   const comandos = {
-    help: {
-      descricao: 'lista os comandos disponíveis',
-      executar() {
-        const linhas = Object.entries(comandos)
-          .filter(([, c]) => !c.oculto)
-          .map(([nome, c]) => `<span class="chave">${nome}</span><span>${c.descricao}</span>`)
-          .join('');
-        return `<div class="grade">${linhas}</div>`;
-      }
-    },
-
+    help: { d: 'lista os comandos', x: () => grade(Object.entries(comandos).filter(([, c]) => c.d).map(([n, c]) => [n, c.d])) },
     whoami: {
-      descricao: 'quem é o dono desse terminal',
-      executar() {
-        return `<b>Italo Cunha</b> — jogos, back-end e programação competitiva.<br>
-                Godot de um lado, Flask e Laravel do outro, C++ e OBI no meio, Linux embaixo de tudo.<br>
-                Aprendo construindo: quase todo projeto meu começou como curiosidade mal resolvida.`;
-      }
+      d: 'quem é o dono desse terminal',
+      x: () => `<b>Italo Cunha</b> — jogos, back-end, C++ e direção de arte.<br>Godot de um lado, Flask e Laravel do outro, competitiva no meio, Linux embaixo de tudo.<br>E a Mosaic por cima: uma identidade com a cara do wallpaper.`,
     },
-
-    ls: {
-      descricao: 'lista as seções da página',
-      executar() {
-        return secoes.map(s => `<span class="chave">${s}/</span>`).join('&nbsp;&nbsp;');
-      }
-    },
-
+    ls: { d: 'lista as seções da página', x: () => SECOES.map((s) => `<span class="chave">${s}/</span>`).join('&nbsp;&nbsp;') },
     cd: {
-      descricao: 'navega até uma seção — ex: cd projetos',
-      executar(args) {
-        const alvo = (args[0] || '').replace(/\/$/, '');
-        if (!alvo || alvo === '~' || alvo === '/') {
-          document.getElementById('topo').scrollIntoView({ behavior: 'smooth' });
-          return 'voltando para <span class="chave">~</span>';
-        }
-        if (!secoes.includes(alvo)) {
-          return `<span class="erro">cd: ${escapar(alvo)}: diretório não encontrado</span><br>
-                  seções: ${secoes.join(', ')}`;
-        }
-        document.getElementById(alvo).scrollIntoView({ behavior: 'smooth' });
+      d: 'vai até uma seção — ex: cd mosaic',
+      x(args) {
+        const alvo = (args[0] || '').replace(/\/$/, '').normalize('NFD').replace(/[̀-ͯ]/g, '');
+        if (!alvo || alvo === '~' || alvo === '/') { irParaSecao('inicio'); return 'voltando para <span class="chave">~</span>'; }
+        if (!SECOES.includes(alvo)) return `<span class="erro">cd: ${escapar(alvo)}: diretório não encontrado</span><br>seções: ${SECOES.join(', ')}`;
+        irParaSecao(alvo);
         return `~/<span class="chave">${alvo}</span>`;
-      }
+      },
     },
-
-    stack: {
-      descricao: 'o que eu uso no dia a dia',
-      executar() {
-        return `<div class="grade">
-          <span class="chave">competitiva</span><span>C++, algoritmos, estruturas de dados, STL</span>
-          <span class="chave">gamedev</span><span>Godot, GDScript, C#, Pygame, GameMaker</span>
-          <span class="chave">web</span><span>Flask, Python, SQL, Laravel, PHP, JavaScript</span>
-          <span class="chave">sistema</span><span>Linux, Bash, Git, Hyprland, C</span>
-        </div>`;
-      }
+    mosaic: {
+      d: 'o ecossistema, em uma tela',
+      x: () => grade([
+        ['store', 'loja de pacotes pro Arch — Flask, pywebview, SQLite FTS5 · ' + link('mosaicStore')],
+        ['ui', 'a identidade virou biblioteca — HTML, CSS, JS puro, 0 dependências'],
+        ['os', 'desktop em Quickshell pro Hyprland — ilha líquida, dock de vidro · ' + link('mosaicOS')],
+        ['ideal', 'calma, rápida e legível. com a cara do seu wallpaper.'],
+      ]),
     },
-
     projetos: {
-      descricao: 'lista os projetos com link',
-      executar() {
-        const linhas = projetos.map(([nome, tec, repo]) =>
-          `<span class="chave">${nome}</span><span>${tec} · <a href="https://github.com/amendoa657/${repo}" target="_blank" rel="noopener">github.com/amendoa657/${repo}</a></span>`
-        ).join('');
-        return `<div class="grade">${linhas}</div>`;
-      }
+      d: 'os projetos, com link',
+      x: () => grade([
+        ['Mosaic Store', link('mosaicStore')], ['Mosaic OS', link('mosaicOS')], ['IndieSquad', link('indieSquad')],
+        ['TuxAssist', link('tuxAssist')], ['Zé Gotinha', link('ZeGotinhaGame')], ['Raycasting', link('RaycastingGame')],
+        ['Criptografia', link('Criptografia')], ['Laravel API', link('laravelApiRest')],
+      ]),
     },
-
-    contato: {
-      descricao: 'como falar comigo',
-      executar() {
-        return `<div class="grade">
-          <span class="chave">email</span><span><a href="mailto:italocisarpinheiro@gmail.com">italocisarpinheiro@gmail.com</a></span>
-          <span class="chave">github</span><span><a href="https://github.com/amendoa657" target="_blank" rel="noopener">github.com/amendoa657</a></span>
-          <span class="chave">linkedin</span><span><a href="https://www.linkedin.com/in/italo-cunha-028baa356/" target="_blank" rel="noopener">italo-cunha</a></span>
-        </div>`;
-      }
+    stack: {
+      d: 'o que eu uso no dia a dia',
+      x: () => grade([
+        ['gamedev', 'Godot, GDScript, C#, Pygame, GameMaker'],
+        ['web', 'Flask, Python, SQL, CSS, JavaScript, Laravel, PHP'],
+        ['competitiva', 'C++, algoritmos, STL, Java'],
+        ['sistema', 'Linux, QML, Git, Hyprland, Neovim, Matugen'],
+      ]),
     },
-
-    neofetch: {
-      descricao: 'informações do ambiente',
-      executar() {
-        return `<div class="grade">
-          <span class="chave">host</span><span>italo@cachyos</span>
-          <span class="chave">os</span><span>CachyOS x86_64</span>
-          <span class="chave">kernel</span><span>linux-cachyos</span>
-          <span class="chave">wm</span><span>Hyprland (rice própria)</span>
-          <span class="chave">shell</span><span>fish</span>
-          <span class="chave">uptime</span><span>programando desde 2019</span>
-        </div>`;
-      }
-    },
-
     trajetoria: {
-      descricao: 'a linha do tempo, resumida',
-      executar() {
-        return `<div class="grade">
-          <span class="chave">2019</span><span>primeiro contato — GameMaker Studio 2, 5º ano</span>
-          <span class="chave">2021</span><span>Ubuntu, primeiro Linux — virou sistema principal</span>
-          <span class="chave">2022</span><span>Artix, e o mundo Arch de vez</span>
-          <span class="chave">2023</span><span>Godot — começo do Zé Gotinha Adventures</span>
-          <span class="chave">2024</span><span>C++ e lógica de programação mais avançada</span>
-          <span class="chave">2025</span><span>primeira OBI, competitiva pra valer</span>
-          <span class="chave">hoje</span><span><span class="ok">HEAD</span> — CachyOS + Hyprland, rice própria</span>
-        </div>`;
-      }
+      d: 'a evolução, resumida',
+      x: () => grade([
+        ['2019', 'GameMaker, 5º ano — o primeiro Zé Gotinha'], ['2021', 'Ubuntu, o primeiro Linux'], ['2022', 'Artix, e o mundo Arch de vez'],
+        ['2023', 'Godot — o Zé Gotinha refeito'], ['2024', 'C++ e competitiva'], ['2025', 'Amigos Droids, FTC'],
+        ['2026', 'nasce a Mosaic'], ['hoje', '<span class="ok">HEAD</span> — CachyOS + Mosaic OS'],
+      ]),
     },
-
-    clear: {
-      descricao: 'volta o terminal ao estado inicial (ou Ctrl+L)',
-      executar() {
-        restaurarInicio();
-        return null;
-      }
+    neofetch: {
+      d: 'informações do ambiente',
+      x: () => grade([['host', 'italo@cachyos'], ['os', 'CachyOS x86_64'], ['wm', 'Hyprland + Mosaic OS'], ['shell', 'fish'], ['editor', 'Neovim'], ['uptime', 'programando desde 2019']]),
     },
-
-    sudo: {
-      descricao: 'tentar o que não deve',
-      executar() {
-        return `<span class="erro">italo não está no arquivo sudoers.</span><br>
-                Este incidente será reportado.`;
-      }
+    wallpaper: {
+      d: 'troca as cores do site — ex: wallpaper laranja',
+      x(args) {
+        const nome = (args[0] || '').toLowerCase();
+        if (!window.Tema) return '<span class="erro">tema indisponível</span>';
+        if (!nome) return `atual: <span class="chave">${Tema.atual()}</span><br>opções: ${Tema.PALETAS.join(', ')}`;
+        if (!Tema.PALETAS.includes(nome)) return `<span class="erro">wallpaper: ${escapar(nome)}: não existe</span><br>opções: ${Tema.PALETAS.join(', ')}`;
+        setTimeout(() => Tema.aplicar(nome), 120);
+        return `matugen gerando a paleta <span class="chave">${nome}</span>… <span class="ok">ok</span>`;
+      },
     },
-
-    /* escondidos do help, mas funcionam */
-    amendoim: {
-      descricao: '',
-      oculto: true,
-      executar() {
-        return `<span class="ok">dependência crítica satisfeita.</span> produtividade +20%.`;
-      }
+    contato: {
+      d: 'como falar comigo',
+      x: () => grade([
+        ['email', '<a href="mailto:italocisarpinheiro@gmail.com">italocisarpinheiro@gmail.com</a>'],
+        ['github', '<a href="https://github.com/amendoa657" target="_blank" rel="noopener">github.com/amendoa657</a>'],
+        ['linkedin', '<a href="https://www.linkedin.com/in/italo-cunha-028baa356/" target="_blank" rel="noopener">italo-cunha</a>'],
+      ]),
     },
-    exit: {
-      descricao: '',
-      oculto: true,
-      executar() {
-        return 'não dá pra sair, essa é a página inteira.';
-      }
-    }
+    clear: { d: 'limpa a tela (ou Ctrl+L)', x: () => { historico.innerHTML = ''; return null; } },
+    exit: { d: 'fecha o terminal', x: () => { fechar(); return null; } },
+    sudo: { d: '', x: () => '<span class="erro">italo não está no arquivo sudoers.</span><br>Este incidente será reportado.' },
+    paru: { d: '', x: (a) => a.join(' ').includes('mosaic') ? ':: resolvendo dependências…<br><span class="ok">mosaic-store</span> já está instalado — e com a cara do seu wallpaper.' : 'use a <span class="chave">Mosaic Store</span>, é mais bonito.' },
+    amendoim: { d: '', x: () => '<span class="ok">dependência crítica satisfeita.</span> produtividade +20%.' },
   };
+  const apelidos = { about: 'whoami', sobre: 'whoami', skills: 'stack', projects: 'projetos', repos: 'projetos', contact: 'contato', cls: 'clear', ajuda: 'help', '?': 'help', timeline: 'trajetoria', evolucao: 'trajetoria', tema: 'wallpaper', theme: 'wallpaper', q: 'exit' };
+  const nomes = [...Object.keys(comandos), ...Object.keys(apelidos)];
 
-  const aliases = {
-    about: 'whoami', sobre: 'whoami', quem: 'whoami',
-    skills: 'stack', habilidades: 'stack',
-    projects: 'projetos', repos: 'projetos',
-    contact: 'contato', email: 'contato',
-    cls: 'clear', dir: 'ls', ajuda: 'help', '?': 'help',
-    timeline: 'trajetoria', historia: 'trajetoria', obi: 'trajetoria'
-  };
+  const passados = [];
+  let iPassado = 0;
 
-  const nomesComandos = [...Object.keys(comandos), ...Object.keys(aliases)];
-
-  /* ---------- execução ---------- */
-
-  function executar(textoBruto) {
-    const texto = textoBruto.trim();
-    ecoarComando(texto);
-    if (!texto) { rolarParaFim(); return; }
-
+  function executar(bruto) {
+    const texto = bruto.trim();
+    ecoar(texto);
+    if (texto) { passados.push(texto); iPassado = passados.length; }
+    if (!texto) return rolar();
     const [nomeBruto, ...args] = texto.split(/\s+/);
-    const nome = aliases[nomeBruto.toLowerCase()] || nomeBruto.toLowerCase();
-    const comando = comandos[nome];
-
-    if (!comando) {
-      imprimir(`<span class="erro">comando não encontrado: ${escapar(nomeBruto)}</span><br>
-                digite <span class="chave">help</span> para ver o que existe aqui.`);
-      return;
-    }
-
-    const saida = comando.executar(args);
-    if (saida !== null) imprimir(saida);
-    rolarParaFim();
+    const nome = apelidos[nomeBruto.toLowerCase()] || nomeBruto.toLowerCase();
+    const c = comandos[nome];
+    if (!c) return imprimir(`<span class="erro">comando não encontrado: ${escapar(nomeBruto)}</span><br>digite <span class="chave">help</span> pra ver o que existe aqui.`);
+    const saida = c.x(args);
+    if (saida != null) imprimir(saida);
+    rolar();
   }
 
-  /* ---------- estado inicial ----------
-     Guardamos o conteúdo do terminal logo depois do boot para que `clear`
-     devolva a apresentação, em vez de deixar a tela vazia. */
-
-  let estadoInicial = null;
-
-  function restaurarInicio() {
-    if (estadoInicial === null) {
-      historico.innerHTML = '';
-      return;
-    }
-    historico.innerHTML = estadoInicial;
-    corpo.scrollTop = 0;
-  }
-
-  /* ---------- histórico e autocompletar ---------- */
-
-  const historicoComandos = [];
-  let indiceHistorico = -1;
-
-  function autocompletar() {
-    const valor = entrada.value.trimStart();
-    if (!valor || valor.includes(' ')) return;
-    const candidatos = nomesComandos.filter(n => n.startsWith(valor.toLowerCase()));
-    if (candidatos.length === 1) {
-      entrada.value = candidatos[0] + ' ';
-      atualizarCursor();
-    } else if (candidatos.length > 1) {
-      ecoarComando(valor);
-      imprimir(candidatos.map(c => `<span class="chave">${c}</span>`).join('&nbsp;&nbsp;'));
-    }
-  }
-
-  /* ---------- cursor em bloco ---------- */
-
-  function atualizarCursor() {
-    const pos = entrada.selectionStart ?? entrada.value.length;
-    cursorEntrada.style.setProperty('--pos', pos);
-    cursorEntrada.style.marginLeft = `${-entrada.scrollLeft}px`;
-  }
-
-  ['input', 'keyup', 'click', 'select', 'scroll'].forEach(evento =>
-    entrada.addEventListener(evento, atualizarCursor)
-  );
-  entrada.addEventListener('focus', () => linhaEntrada.classList.remove('semFoco'));
-  entrada.addEventListener('blur',  () => linhaEntrada.classList.add('semFoco'));
-
-  /* ---------- eventos ---------- */
-
-  linhaEntrada.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const valor = entrada.value;
-    if (valor.trim()) {
-      historicoComandos.push(valor);
-      indiceHistorico = historicoComandos.length;
-    }
-    executar(valor);
-    entrada.value = '';
-    atualizarCursor();
-  });
-
+  form.addEventListener('submit', (e) => { e.preventDefault(); executar(entrada.value); entrada.value = ''; });
   entrada.addEventListener('keydown', (e) => {
-    if (e.key === 'Tab') {
+    if (e.key === 'ArrowUp') { e.preventDefault(); if (iPassado > 0) entrada.value = passados[--iPassado]; }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); iPassado = Math.min(passados.length, iPassado + 1); entrada.value = passados[iPassado] || ''; }
+    else if (e.key === 'Tab') {
       e.preventDefault();
-      autocompletar();
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      if (indiceHistorico > 0) {
-        indiceHistorico--;
-        entrada.value = historicoComandos[indiceHistorico];
-        requestAnimationFrame(atualizarCursor);
-      }
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      if (indiceHistorico < historicoComandos.length - 1) {
-        indiceHistorico++;
-        entrada.value = historicoComandos[indiceHistorico];
+      const v = entrada.value.trim().toLowerCase();
+      if (!v) return;
+      const partes = v.split(/\s+/);
+      if (partes.length === 1) {
+        const op = nomes.filter((n) => n.startsWith(v));
+        if (op.length === 1) entrada.value = op[0] + ' ';
+        else if (op.length > 1) { ecoar(entrada.value); imprimir(op.join('&nbsp;&nbsp;')); }
       } else {
-        indiceHistorico = historicoComandos.length;
-        entrada.value = '';
+        const lista = partes[0] === 'cd' ? SECOES : (partes[0] === 'wallpaper' || partes[0] === 'tema') ? (window.Tema ? Tema.PALETAS : []) : [];
+        const op = lista.filter((n) => n.startsWith(partes[1]));
+        if (op.length === 1) entrada.value = partes[0] + ' ' + op[0];
       }
-      requestAnimationFrame(atualizarCursor);
-    } else if (e.key === 'l' && e.ctrlKey) {
-      e.preventDefault();
-      restaurarInicio();
+    } else if (e.key === 'l' && e.ctrlKey) { e.preventDefault(); historico.innerHTML = ''; }
+  });
+  corpo.addEventListener('click', () => { if (!getSelection().toString()) entrada.focus(); });
+
+  let saudou = false;
+  function abrir() {
+    if (painel.open) return;
+    painel.showModal();
+    if (!saudou) {
+      saudou = true;
+      imprimir('bem-vindo ao terminal do portfólio. digite <span class="chave">help</span> — ou tente <span class="chave">wallpaper uva</span>.');
     }
-  });
-
-  /* clicar em qualquer área vazia do terminal foca a entrada */
-  corpo.addEventListener('click', (e) => {
-    if (window.getSelection().toString()) return;      // deixa copiar texto
-    if (e.target.closest('a, button')) return;         // não rouba clique de link
-    entrada.focus();
-  });
-
-  dica.addEventListener('click', (e) => {
-    const botao = e.target.closest('[data-comando]');
-    if (!botao) return;
-    entrada.focus();
-    executar(botao.dataset.comando);
-  });
-
-  /* ---------- boot ---------- */
-
-  function liberarEntrada() {
-    bootCursor.classList.add('oculto');
-    linhaEntrada.hidden = false;
-    linhaEntrada.classList.add('semFoco');
-    dica.hidden = false;
-    atualizarCursor();
-    // fotografia do terminal recém-inicializado, usada pelo `clear`
-    estadoInicial = historico.innerHTML;
+    setTimeout(() => entrada.focus(), 50);
   }
-
-  function mostrarCartao() {
-    heroCartao.classList.add('visivel');
-    setTimeout(liberarEntrada, movimentoReduzido ? 0 : 450);
+  function fechar() {
+    if (!painel.open) return;
+    painel.classList.add('fechando');
+    setTimeout(() => { painel.classList.remove('fechando'); painel.close(); }, 260);
   }
-
-  function digitarBoot(texto, aoTerminar) {
-    let i = 0;
-    (function passo() {
-      bootComando.textContent = texto.slice(0, i);
-      if (i++ <= texto.length) {
-        setTimeout(passo, 55 + Math.random() * 65);   // ritmo irregular, como digitação real
-      } else {
-        setTimeout(aoTerminar, 220);
-      }
-    })();
-  }
-
-  if (movimentoReduzido) {
-    bootComando.textContent = 'whoami';
-    mostrarCartao();
-  } else {
-    setTimeout(() => digitarBoot('whoami', mostrarCartao), 400);
-  }
+  painel.addEventListener('cancel', (e) => { e.preventDefault(); fechar(); });
+  painel.addEventListener('click', (e) => { if (e.target === painel) fechar(); });
+  abrirBotao.addEventListener('click', abrir);
+  fecharBotao.addEventListener('click', fechar);
 })();

@@ -3,667 +3,779 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Italo Cunha — game dev &amp; back-end</title>
+<title>Italo Cunha — jogos, back-end e a Mosaic</title>
 
-<meta name="description" content="Italo Cunha, desenvolvedor. Jogos na Godot, back-end em Flask e Laravel, Linux como ambiente de trabalho. Projetos, stack e contato.">
+<meta name="description" content="Italo Cunha, desenvolvedor. Jogos na Godot, back-end em Flask e Laravel, e a Mosaic: uma loja de pacotes, uma biblioteca de interface e um desktop para Linux com a cara do seu wallpaper.">
 <meta name="author" content="Italo Cunha">
-<meta name="theme-color" content="#0b0e12">
+<meta name="theme-color" content="#14121a">
 
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
-<meta property="og:title" content="Italo Cunha — game dev &amp; back-end">
-<meta property="og:description" content="Jogos na Godot, back-end em Flask e Laravel, Linux como ambiente de trabalho.">
-<meta name="twitter:card" content="summary">
+<meta property="og:title" content="Italo Cunha — jogos, back-end e a Mosaic">
+<meta property="og:description" content="Jogos na Godot, back-end em Flask e Laravel, e um ecossistema inteiro com a cara do wallpaper.">
+<meta name="twitter:card" content="summary_large_image">
 
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b0e12'/%3E%3Ctext x='50' y='70' font-size='58' text-anchor='middle' fill='%23ffb454' font-family='monospace' font-weight='bold'%3E%3E_%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' rx='20' fill='%2314121a'/%3E%3Crect x='16' y='16' width='29' height='29' rx='4' fill='%2386d7ac'/%3E%3Crect x='51' y='16' width='29' height='29' rx='4' fill='%23e9b9d3'/%3E%3Crect x='16' y='51' width='29' height='29' rx='4' fill='%23b5c5f9'/%3E%3Crect x='51' y='51' width='29' height='29' rx='4' fill='%23e6e0ec'/%3E%3C/svg%3E">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="fontes/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fontes/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 
-<script>document.documentElement.classList.add('js');</script>
+<script>
+  /* Antes da primeira pintura: liga o JS, devolve o wallpaper escolhido e
+     decide se a abertura roda (uma vez por sessão, e nunca com movimento reduzido). */
+  (function () {
+    var raiz = document.documentElement;
+    raiz.classList.add('js');
+    try {
+      var p = localStorage.getItem('italo:paleta');
+      if (p) raiz.setAttribute('data-paleta', p);
+    } catch (e) {}
+    var reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var vista = false;
+    try { vista = sessionStorage.getItem('italo:abertura') === '1'; } catch (e) {}
+    if (reduzido || vista) raiz.classList.add('sem-abertura');
+  })();
+</script>
+<style>.sem-abertura .abertura { display: none; }</style>
 </head>
 <body>
 
-<a class="linkPular" href="#principal">Pular para o conteúdo</a>
+<a class="link-pular" href="#principal">Pular para o conteúdo</a>
 
-<nav class="navBarra">
-  <div class="navInterna">
-    <a href="#topo" class="navLogo" aria-label="Início">
-      <span class="navLogoPrompt">~/</span>italo
+<canvas class="campo-fundo" id="campo" aria-hidden="true"></canvas>
+<canvas class="cortina" id="cortina" aria-hidden="true"></canvas>
+
+<!-- ============ ABERTURA ============ -->
+<div class="abertura" id="abertura" aria-hidden="true">
+  <div class="abertura-centro">
+    <i class="mo-marca mo-marca--girando"></i>
+    <div class="abertura-blocos" id="aberturaBlocos"></div>
+    <p class="abertura-texto" id="aberturaTexto">italo@mosaic ~ iniciando</p>
+  </div>
+</div>
+
+<!-- ============ CABEÇALHO ============ -->
+<header class="cabecalho" id="cabecalho">
+  <div class="cabecalho-interno">
+    <a href="#inicio" class="logotipo" data-onda aria-label="Italo Cunha, início">
+      <i class="mo-marca mo-marca--viva"></i>
+      italo <span class="logotipo-sufixo">cunha</span>
     </a>
 
-    <ul class="navLinks" id="navLinks">
-      <li><a href="#sobre">sobre</a></li>
-      <li><a href="#trajetoria">trajetória</a></li>
-      <li><a href="#stack">stack</a></li>
-      <li><a href="#projetos">projetos</a></li>
-      <li><a href="#contato">contato</a></li>
-    </ul>
+    <nav class="nav" id="nav" aria-label="Seções">
+      <span class="nav-pilula" id="navPilula" aria-hidden="true"></span>
+      <a class="nav-item" href="#sobre" data-onda data-atalho="1">sobre <kbd class="mo-atalho">1</kbd></a>
+      <a class="nav-item" href="#evolucao" data-onda data-atalho="2">evolução <kbd class="mo-atalho">2</kbd></a>
+      <a class="nav-item" href="#mosaic" data-onda data-atalho="3">mosaic <kbd class="mo-atalho">3</kbd></a>
+      <a class="nav-item" href="#projetos" data-onda data-atalho="4">projetos <kbd class="mo-atalho">4</kbd></a>
+      <a class="nav-item" href="#stack" data-onda data-atalho="5">stack <kbd class="mo-atalho">5</kbd></a>
+      <a class="nav-item" href="#contato" data-onda data-atalho="6">contato <kbd class="mo-atalho">6</kbd></a>
+    </nav>
 
-    <button class="navAlternar" id="navAlternar" aria-label="Abrir menu" aria-expanded="false" aria-controls="navLinks">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-  <div class="navProgresso" id="navProgresso"></div>
-</nav>
-
-<header class="heroi" id="topo">
-  <div class="contentor">
-
-    <div class="terminal" id="terminal">
-      <div class="terminalBarra">
-        <span class="terminalPonto vermelho"></span>
-        <span class="terminalPonto amarelo"></span>
-        <span class="terminalPonto verde"></span>
-        <span class="terminalTitulo">italo@cachyos &nbsp;—&nbsp; fish &nbsp;—&nbsp; 96×28</span>
-      </div>
-
-      <div class="terminalCorpo" id="terminalCorpo">
-        <div class="terminalHistorico" id="terminalHistorico" role="log" aria-live="polite" aria-label="Saída do terminal">
-
-          <div class="terminalLinha">
-            <span class="terminalPrompt" aria-hidden="true"><b>italo</b>@cachyos<i>:</i><u>~</u><i>$</i></span>
-            <span id="bootComando"></span><span class="cursorBloco" id="bootCursor"></span>
-          </div>
-
-          <div class="heroCartao" id="heroCartao">
-            <h1 class="heroNome">Italo <span class="destaque">Cunha</span></h1>
-            <p class="heroFuncao">
-              Desenvolvedor de jogos <span class="separador">·</span> back-end <span class="separador">·</span> front-end <span class="separador">·</span> programação competitiva
-            </p>
-            <p class="heroResumo">
-              Faço jogos desde antes de saber o que era um bom código. Hoje divido o
-              tempo entre engines, servidores, front-end e C++ resolvendo problema de olimpíada.
-            </p>
-            <div class="heroAcoes">
-              <a href="#projetos" class="botao botaoPrimario">ver projetos</a>
-              <a href="https://github.com/amendoa657" target="_blank" rel="noopener" class="botao botaoFantasma">github</a>
-            </div>
-          </div>
-
-        </div>
-
-        <form class="terminalEntradaLinha" id="terminalEntradaLinha" hidden autocomplete="off">
-          <span class="terminalPrompt" aria-hidden="true">
-            <b>italo</b>@cachyos<i>:</i><u>~</u><i>$</i>
-          </span>
-          <span class="terminalCampo">
-            <input
-              id="terminalEntrada"
-              type="text"
-              aria-label="Digite um comando. Use help para ver a lista."
-              autocomplete="off"
-              autocapitalize="off"
-              autocorrect="off"
-              spellcheck="false"
-              enterkeyhint="go">
-            <span class="cursorBloco cursorEntrada" id="cursorEntrada" aria-hidden="true"></span>
-          </span>
-        </form>
-      </div>
+    <div class="cabecalho-acoes">
+      <button type="button" class="mo-tecla mo-tecla--p" id="abrirTerminal" data-atalho="t" aria-haspopup="dialog" aria-controls="terminal">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 4.5 6.5 8 3 11.5M8.5 12h5"/></svg>
+        <span class="rotulo-tecla">terminal</span> <kbd class="mo-atalho">T</kbd>
+      </button>
+      <button type="button" class="mo-tecla mo-tecla--p mo-tecla--icone nav-alternar" id="navAlternar" aria-label="Abrir menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/></svg>
+      </button>
     </div>
-
-    <p class="terminalDica" id="terminalDica" hidden>
-      terminal de verdade — digite <code>help</code>, ou
-      <button type="button" class="dicaComando" data-comando="help">clique aqui</button>
-    </p>
-
   </div>
-
-  <div class="dicaRolagem" aria-hidden="true">
-    <span class="barra"></span>
-  </div>
+  <div class="progresso-blocos" id="progresso" aria-hidden="true"></div>
 </header>
 
 <main id="principal">
 
+  <!-- ============ INÍCIO ============ -->
+  <section class="heroi" id="inicio" aria-labelledby="nome">
+    <div class="contentor heroi-grade">
+
+      <div class="heroi-texto">
+        <p class="heroi-sobrelinha rotulo revelar"><span class="mo-pulso"></span> portfólio · 2019 → 2026</p>
+
+        <h1 class="heroi-nome" id="nome" data-pixel-texto="heroi">
+          <span class="linha">Italo</span>
+          <span class="linha">Cunha<span class="ponto">.</span></span>
+        </h1>
+
+        <p class="heroi-papel revelar" aria-live="polite">
+          <span>Desenvolvedor de</span>
+          <span class="papel-palavra mo-tom-0" id="papel">jogos</span>
+        </p>
+
+        <p class="heroi-resumo revelar">
+          Faço jogo desde os 10 anos, back-end em <b>Flask</b> e <b>Laravel</b>, C++ de
+          competitiva — e criei a <b>Mosaic</b>: uma loja de pacotes, uma biblioteca de interface
+          e um desktop inteiro para Linux, todos com a cara do seu wallpaper.
+        </p>
+
+        <div class="heroi-acoes revelar">
+          <a href="#mosaic" class="mo-tecla mo-tecla--g mo-tecla--destaque" data-onda data-atalho="enter">
+            conhecer a Mosaic <kbd class="mo-atalho">↵</kbd>
+          </a>
+          <a href="#projetos" class="mo-tecla mo-tecla--g" data-onda data-atalho="p">
+            projetos <kbd class="mo-atalho">P</kbd>
+          </a>
+          <a href="https://github.com/amendoa657" target="_blank" rel="noopener" class="mo-tecla mo-tecla--g mo-tecla--sutil" data-atalho="g">
+            github <kbd class="mo-atalho">G</kbd>
+          </a>
+        </div>
+      </div>
+
+      <div class="heroi-lado revelar">
+        <button type="button" class="mascote" id="mascote" aria-label="Trocar o wallpaper do site" data-atalho="w">
+          <span class="mascote-blocos" aria-hidden="true"><i style="--c:var(--mo-destaque)"></i><i style="--c:var(--mo-secundaria)"></i><i style="--c:var(--mo-terciaria)"></i><i style="--c:var(--mo-texto)"></i></span>
+          <span class="mascote-olhos" aria-hidden="true">
+            <span class="olho"><span class="pupila"></span></span>
+            <span class="olho"><span class="pupila"></span></span>
+          </span>
+          <span class="mascote-balao" aria-hidden="true">me clica ;)</span>
+        </button>
+
+        <div class="wallpaper">
+          <span class="rotulo">wallpaper <kbd class="mo-atalho">W</kbd></span>
+          <div class="wallpaper-opcoes" role="group" aria-label="Paleta de cores do site">
+            <button type="button" class="mo-tecla wallpaper-opcao" data-paleta="menta" aria-label="Menta" aria-pressed="true"><i class="mo-marca" style="--mo-marca-1:#86d7ac;--mo-marca-2:#e9b9d3;--mo-marca-3:#b5c5f9;--mo-marca-4:#e6e0ec"></i></button>
+            <button type="button" class="mo-tecla wallpaper-opcao" data-paleta="laranja" aria-label="Laranja" aria-pressed="false"><i class="mo-marca" style="--mo-marca-1:#ffb77c;--mo-marca-2:#e2c0a4;--mo-marca-3:#c1cc8f;--mo-marca-4:#f0dfd5"></i></button>
+            <button type="button" class="mo-tecla wallpaper-opcao" data-paleta="azul" aria-label="Azul" aria-pressed="false"><i class="mo-marca" style="--mo-marca-1:#a8c8ff;--mo-marca-2:#bdc7dc;--mo-marca-3:#dbbce1;--mo-marca-4:#e2e2e9"></i></button>
+            <button type="button" class="mo-tecla wallpaper-opcao" data-paleta="uva" aria-label="Uva" aria-pressed="false"><i class="mo-marca" style="--mo-marca-1:#d0bcff;--mo-marca-2:#efb8c8;--mo-marca-3:#9ccfd8;--mo-marca-4:#e6e0e9"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="heroi-rodape">
+      <div class="contentor heroi-rodape-interno">
+        <span><span class="mo-pulso"></span> aberto a estágio e freela · MG, Brasil</span>
+        <span class="heroi-atalhos" aria-hidden="true">
+          <span><kbd class="mo-atalho">1</kbd>–<kbd class="mo-atalho">6</kbd> seções</span>
+          <span><kbd class="mo-atalho">/</kbd> buscar</span>
+          <span><kbd class="mo-atalho">T</kbd> terminal</span>
+        </span>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ SOBRE ============ -->
-  <section class="secao" id="sobre">
+  <section class="secao" id="sobre" aria-labelledby="tituloSobre">
     <div class="contentor">
-      <header class="secaoCabecalho revelar">
-        <span class="secaoNumero">01</span>
-        <h2 class="secaoTitulo">Sobre</h2>
-        <span class="secaoRegua"></span>
-        <span class="secaoComando">cat sobre.md</span>
+      <header class="secao-cabecalho mo-tom-0">
+        <div class="secao-topo revelar"><span class="secao-numero">01</span><span class="secao-comando">cat sobre.md</span></div>
+        <h2 class="secao-titulo" id="tituloSobre" data-pixel-texto>Quem <em>sou</em></h2>
       </header>
 
-      <div class="sobreGrade">
-        <div class="sobreTexto revelar">
+      <div class="bento">
+        <article class="mo-cartao bento-texto revelar">
+          <p class="bento-frase">Aprendo construindo — e <em>refaço até entender</em>.</p>
           <p>
-            Comecei a programar querendo fazer jogo. Em 2019 fiz um no GameMaker que era
-            sinceramente ruim, e anos depois refiz o mesmo jogo na Godot só pra medir o quanto
-            eu tinha mudado. Foi o projeto que mais me ensinou até hoje.
+            Comecei a programar querendo fazer jogo. Em 2019, com 10 anos, fiz o Zé Gotinha no
+            GameMaker. Era ruim do jeito que tinha que ser. Anos depois refiz o mesmo jogo na Godot
+            só pra medir o quanto eu tinha mudado.
           </p>
           <p>
-            Agora o tempo se divide em três frentes. Na Godot eu escrevo GDScript. No
-            back-end, Flask quando é Python e Laravel quando é PHP. E desde 2024 tem C++, que
-            começou como curiosidade sobre o que acontece por baixo e virou programação
-            competitiva.
+            Hoje o tempo se divide entre <b>engines</b>, <b>servidores</b> e <b>C++</b> de competitiva —
+            que me ensinou a perguntar quanto custa antes de perguntar se funciona.
           </p>
           <p>
-            Competitiva mudou o jeito que eu escrevo código. Quando o limite é um segundo,
-            você para de perguntar se funciona e passa a perguntar quanto custa. Isso vazou
-            pro resto: hoje penso em complexidade antes de pensar em sintaxe.
+            E tem a parte que mais me define agora: <b>direção de arte</b>. A Mosaic começou como uma
+            loja de pacotes pro meu Arch e virou uma identidade visual inteira, com biblioteca,
+            desktop e regras de movimento. A paleta, os layouts e o nome são meus.
           </p>
-          <p>
-            Uso Linux como sistema principal desde 2021 e passo boa parte do dia no terminal.
-            Não é pose: ferramenta pequena que faz uma coisa bem encaixa melhor no meu jeito de
-            trabalhar do que interface grande que faz tudo mais ou menos.
-          </p>
+        </article>
+
+        <article class="mo-cartao bento-numero mo-tom-0 revelar">
+          <span class="mo-reticula"></span>
+          <strong data-contar="7">0</strong>
+          <span>anos programando, desde o GameMaker no PC velho da minha vó</span>
+        </article>
+
+        <article class="mo-cartao bento-numero mo-tom-1 revelar">
+          <span class="mo-reticula"></span>
+          <strong data-contar="50">0</strong>
+          <span>repositórios públicos no GitHub, de jogo a assistente de voz</span>
+        </article>
+
+        <article class="mo-cartao bento-numero mo-tom-2 revelar">
+          <span class="mo-reticula"></span>
+          <strong data-contar="3">0</strong>
+          <span>projetos no ecossistema Mosaic: Store, UI e OS</span>
+        </article>
+
+        <article class="mo-cartao bento-numero mo-tom-3 revelar">
+          <span class="mo-reticula"></span>
+          <strong data-contar="2021" data-de="1990">0</strong>
+          <span>o ano em que o Linux virou meu sistema principal — e nunca mais saiu</span>
+        </article>
+
+        <article class="mo-cartao neofetch revelar" aria-label="Ambiente de trabalho">
+          <i class="mo-marca neofetch-marca mo-marca--viva" aria-hidden="true"></i>
+          <div>
+            <p class="neofetch-titulo"><b>italo</b>@<b>cachyos</b></p>
+            <dl>
+              <dt class="mo-tom-0">os</dt><dd>CachyOS x86_64</dd>
+              <dt class="mo-tom-1">wm</dt><dd>Hyprland + Mosaic OS</dd>
+              <dt class="mo-tom-2">shell</dt><dd>fish</dd>
+              <dt class="mo-tom-3">editor</dt><dd>Neovim</dd>
+              <dt class="mo-tom-0">engine</dt><dd>Godot</dd>
+              <dt class="mo-tom-1">uptime</dt><dd>programando desde 2019</dd>
+            </dl>
+            <div class="neofetch-paleta" aria-hidden="true">
+              <i style="--c:var(--mo-destaque)"></i><i style="--c:var(--mo-secundaria)"></i><i style="--c:var(--mo-terciaria)"></i><i style="--c:var(--mo-mista)"></i>
+              <i style="--c:var(--mo-secundaria-fundo)"></i><i style="--c:var(--mo-terciaria-fundo)"></i><i style="--c:var(--mo-elevada)"></i><i style="--c:var(--mo-texto)"></i>
+            </div>
+          </div>
+        </article>
+
+        <article class="mo-cartao bento-principio revelar">
+          <i class="mo-marca" aria-hidden="true"></i>
+          <p>Ferramenta pequena que faz uma coisa bem.<small>Por isso Linux, terminal, Neovim — e interfaces calmas, rápidas e legíveis.</small></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EVOLUÇÃO ============ -->
+  <section class="secao evolucao" id="evolucao" aria-labelledby="tituloEvolucao">
+    <div class="contentor">
+      <header class="secao-cabecalho mo-tom-1">
+        <div class="secao-topo revelar"><span class="secao-numero">02</span><span class="secao-comando">git log --reverse</span></div>
+        <h2 class="secao-titulo" id="tituloEvolucao" data-pixel-texto>A <em>evolução</em></h2>
+        <p class="secao-intro revelar">De um jogo no GameMaker a um ecossistema inteiro. Role a página: cada commit é um ano.</p>
+      </header>
+    </div>
+
+    <div class="evolucao-trilho" id="evolucaoTrilho">
+      <div class="evolucao-palco">
+        <div class="contentor evolucao-grade">
+          <div class="evolucao-info" id="evolucaoInfo" aria-live="polite">
+            <div class="evolucao-ano" id="evolucaoAno" aria-hidden="true"><span>2019</span></div>
+            <p class="evolucao-commit" id="evolucaoCommit"><b>init</b> commit 1/8</p>
+            <h3 class="evolucao-titulo" id="evolucaoTitulo">primeiro contato</h3>
+            <p class="evolucao-texto" id="evolucaoTexto">5º ano, GameMaker Studio 2.</p>
+            <div class="evolucao-tags" id="evolucaoTags"></div>
+          </div>
+
+          <figure class="janela-imagem evolucao-midia" style="margin:0">
+            <div class="janela-barra">
+              <i class="mo-marca"></i>
+              <span id="evolucaoArquivo">~/trajetoria/2019.webp</span>
+              <span class="janela-pontos" aria-hidden="true"><i></i><i></i><i></i></span>
+            </div>
+            <div class="janela-corpo" id="evolucaoQuadro">
+              <img id="evolucaoImagem" src="img/gameMaker.webp" alt="" width="1280" height="800" decoding="async">
+            </div>
+            <figcaption class="janela-legenda" id="evolucaoLegenda">programando tudo num pc velho da minha vó</figcaption>
+          </figure>
+
+          <div class="evolucao-linha" id="evolucaoLinha">
+            <span class="preenchido" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MOSAIC ============ -->
+  <section class="secao mosaic" id="mosaic" aria-labelledby="tituloMosaic">
+    <div class="contentor">
+      <header class="secao-cabecalho mo-tom-2">
+        <div class="secao-topo revelar"><span class="secao-numero">03</span><span class="secao-comando">paru -S mosaic</span></div>
+        <div class="mosaic-cabecalho">
+          <i class="mo-marca mo-marca--viva revelar" aria-hidden="true"></i>
+          <div>
+            <h2 class="mosaic-titulo" id="tituloMosaic" data-pixel-texto>Mosaic</h2>
+            <p class="mosaic-lema revelar">Um ecossistema com a cara do seu wallpaper.</p>
+          </div>
+        </div>
+      </header>
+
+      <div class="mosaic-ideal revelar">
+        <p>
+          A ideia é simples: o computador já tem uma cor — a do wallpaper. O <b>Matugen</b> tira dele uma
+          paleta, e tudo da Mosaic se pinta com ela: a loja, os botões, o ícone do app, o desktop inteiro.
+          Troque o wallpaper e o sistema muda de roupa numa onda de pixels.
+        </p>
+        <p>
+          As regras são poucas e rígidas: <b>calma, rápida e legível</b>. Blocos chapados, sombra de objeto
+          (não de luz), curvas fortes e curtas, nada passa de 420 ms, nada quica, e movimento reduzido é
+          respeitado. Os quatro pilares abaixo estão funcionando de verdade — mexe neles.
+        </p>
+      </div>
+
+      <div class="pilares">
+        <article class="mo-cartao pilar mo-tom-0 revelar">
+          <div class="pilar-palco">
+            <div class="pilar-teclas">
+              <button type="button" class="mo-tecla mo-tecla--tom mo-tom-1" data-tecla-pilar="a">A</button>
+              <button type="button" class="mo-tecla mo-tecla--destaque" data-tecla-pilar="s">S</button>
+              <button type="button" class="mo-tecla mo-tecla--tom mo-tom-2" data-tecla-pilar="d">D</button>
+            </div>
+            <span class="pilar-dica">aperte A S D</span>
+          </div>
+          <div class="pilar-texto"><h3>Teclas que afundam</h3><p>descem de verdade no clique — e no teclado</p></div>
+        </article>
+
+        <article class="mo-cartao pilar mo-tom-1 revelar">
+          <div class="pilar-palco"><div class="pilar-blocos" id="pilarBlocos" aria-hidden="true"></div><span class="pilar-dica">passe o mouse</span></div>
+          <div class="pilar-texto"><h3>Blocos chapados</h3><p>cor sólida, quinas retas, quatro tons</p></div>
+        </article>
+
+        <article class="mo-cartao pilar mo-tom-2 revelar">
+          <div class="pilar-palco"><canvas class="pilar-campo" id="pilarCampo" aria-hidden="true"></canvas><span class="pilar-dica">a lente segue o mouse</span></div>
+          <div class="pilar-texto"><h3>Campo de pixels</h3><p>três ondas, uma por cor, atrás de tudo</p></div>
+        </article>
+
+        <article class="mo-cartao pilar mo-tom-3 revelar">
+          <div class="pilar-palco">
+            <button type="button" class="pilar-onda" id="pilarOnda" aria-label="Disparar a onda de pixels"><i></i><i></i><i></i><i></i></button>
+            <span class="pilar-dica">clique na tela</span>
+          </div>
+          <div class="pilar-texto"><h3>Onda de pixels</h3><p>a tela nova nasce numa onda que sai do clique</p></div>
+        </article>
+      </div>
+
+      <!-- A janela do app -->
+      <div class="mo-app revelar" id="moApp">
+        <div class="mo-app-cabecalho">
+          <span class="logotipo"><i class="mo-marca mo-marca--viva"></i> Mosaic</span>
+          <div class="mo-busca-falsa" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="4.8"/><path d="m10.5 10.5 3 3"/></svg>
+            três projetos, uma identidade
+            <kbd class="mo-atalho">/</kbd>
+          </div>
+          <span class="janela-pontos" aria-hidden="true"><i></i><i></i><i></i></span>
         </div>
 
-        <aside class="neofetch revelar" aria-label="Ambiente de trabalho">
-          <pre class="neofetchArte" aria-hidden="true">    .--.
-   |o_o |
-   |:_/ |
-  //   \ \
- (|     | )
-/'\_   _/`\
-\___)=(___/</pre>
+        <div class="mo-app-corpo">
+          <div class="mo-lateral" role="tablist" aria-label="Projetos da Mosaic" aria-orientation="vertical">
+            <span class="mo-lateral-pilula" id="moPilula" aria-hidden="true"></span>
+            <button type="button" class="mo-nav-item" role="tab" id="aba-store" aria-controls="painel-store" aria-selected="true"><span class="ponto"></span><span class="rotulo-nav">Mosaic Store</span><span class="contagem">0.7.2</span></button>
+            <button type="button" class="mo-nav-item" role="tab" id="aba-ui" aria-controls="painel-ui" aria-selected="false" tabindex="-1"><span class="ponto"></span><span class="rotulo-nav">Mosaic UI</span><span class="contagem">0 deps</span></button>
+            <button type="button" class="mo-nav-item" role="tab" id="aba-os" aria-controls="painel-os" aria-selected="false" tabindex="-1"><span class="ponto"></span><span class="rotulo-nav">Mosaic OS</span><span class="contagem">4 temas</span></button>
 
-          <div class="neofetchDados">
-            <p class="neofetchTitulo"><b>italo</b>@<b>cachyos</b></p>
-            <div class="neofetchRegua" aria-hidden="true"></div>
+            <div class="mo-lateral-rotulo rotulo"><span>fontes</span><span>3/3</span></div>
+            <ul class="mo-fontes">
+              <li class="mo-tom-1"><i></i>python <span>on</span></li>
+              <li class="mo-tom-0"><i></i>javascript <span>on</span></li>
+              <li class="mo-tom-2"><i></i>qml <span>on</span></li>
+            </ul>
 
-            <dl class="neofetchInfo">
-              <div class="neofetchLinha" style="--cor:var(--vermelho)">
-                <dt>
-                  <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="9" rx="1.2"/><path d="M5.5 14h5M8 11.5V14"/></svg>
-                  <span class="acessivelOculto">Distribuição</span>
-                </dt>
-                <dd>CachyOS x86_64</dd>
-              </div>
-
-              <div class="neofetchLinha" style="--cor:var(--ambarFixo)">
-                <dt>
-                  <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4.5" y="4.5" width="7" height="7" rx="1"/><path d="M6.5 1.5v3M9.5 1.5v3M6.5 11.5v3M9.5 11.5v3M1.5 6.5h3M1.5 9.5h3M11.5 6.5h3M11.5 9.5h3"/></svg>
-                  <span class="acessivelOculto">Kernel</span>
-                </dt>
-                <dd>linux-cachyos</dd>
-              </div>
-
-              <div class="neofetchLinha" style="--cor:var(--verde)">
-                <dt>
-                  <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 14.5 5v6L8 14.5 1.5 11V5z"/><path d="M1.5 5 8 8.5 14.5 5M8 8.5v6"/></svg>
-                  <span class="acessivelOculto">Pacotes</span>
-                </dt>
-                <dd>pacman</dd>
-              </div>
-
-              <div class="neofetchLinha" style="--cor:var(--rosa)">
-                <dt>
-                  <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path d="M4.5 6.5 6.5 8l-2 1.5M8.5 10h3"/></svg>
-                  <span class="acessivelOculto">Shell</span>
-                </dt>
-                <dd>fish</dd>
-              </div>
-
-              <div class="neofetchLinha" style="--cor:var(--ciano)">
-                <dt>
-                  <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path d="M1.5 6h13"/></svg>
-                  <span class="acessivelOculto">Gerenciador de janelas</span>
-                </dt>
-                <dd>Hyprland <span class="neofetchNota">(rice própria)</span></dd>
-              </div>
-
-              <div class="neofetchLinha" style="--cor:var(--texto)">
-                <dt>
-                  <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 1.5"/></svg>
-                  <span class="acessivelOculto">Tempo de atividade</span>
-                </dt>
-                <dd>programando desde 2019</dd>
-              </div>
-            </dl>
-
-            <div class="neofetchPaleta" role="group" aria-label="Cor de destaque do site">
-              <button type="button" class="neofetchCor" data-cor="#ff7b72" style="--cor:#ff7b72" aria-label="Vermelho"></button>
-              <button type="button" class="neofetchCor" data-cor="#7fd88f" style="--cor:#7fd88f" aria-label="Verde"></button>
-              <button type="button" class="neofetchCor" data-cor="#ffb454" style="--cor:#ffb454" aria-label="Âmbar (padrão)"></button>
-              <button type="button" class="neofetchCor" data-cor="#6cb6ff" style="--cor:#6cb6ff" aria-label="Azul"></button>
-              <button type="button" class="neofetchCor" data-cor="#f5b8d6" style="--cor:#f5b8d6" aria-label="Rosa"></button>
-              <button type="button" class="neofetchCor" data-cor="#56d4dd" style="--cor:#56d4dd" aria-label="Ciano"></button>
-              <button type="button" class="neofetchCor" data-cor="#d5dce4" style="--cor:#d5dce4" aria-label="Branco"></button>
+            <div class="mo-lateral-rodape">
+              <i class="mo-marca"></i>
+              <div>Feito por mim<small>direção de arte · 2026</small></div>
             </div>
-            <p class="neofetchDicaCor">clique para trocar a cor do site</p>
           </div>
-        </aside>
-      </div>
-    </div>
-  </section>
 
-  <!-- ============ TRAJETÓRIA ============ -->
-  <section class="secao" id="trajetoria">
-    <div class="contentor">
-      <header class="secaoCabecalho revelar">
-        <span class="secaoNumero">02</span>
-        <h2 class="secaoTitulo">Trajetória</h2>
-        <span class="secaoRegua"></span>
-        <span class="secaoComando">git log --reverse</span>
-      </header>
+          <div class="mo-conteudo" id="moConteudo">
 
-      <div class="trajetoriaGrade">
-        <ol class="linhaTempo" id="linhaTempo">
-        <li class="linhaTempoItem revelar" data-img="img/gameMaker.png" data-legenda="2019 — progamando tudo num pc velho da minha vo">
-          <button type="button" class="linhaTempoAno" aria-pressed="false" aria-label="Ver imagem de 2019" aria-controls="trajetoriaPainel">2019</button>
-          <div class="linhaTempoCorpo">
-            <h3 class="linhaTempoTitulo">primeiro contato</h3>
-            <p>
-              5º ano, GameMaker Studio 2. Fazia jogo antes de saber o que era lógica de
-              programação — e um deles virou o Zé Gotinha, que eu refaria anos depois.
-            </p>
-          </div>
-        </li>
+            <!-- STORE -->
+            <div class="mo-painel" role="tabpanel" id="painel-store" aria-labelledby="aba-store">
+              <div class="destaque-app">
+                <span class="mo-reticula"></span>
+                <div class="mo-icone-app mo-icone-app--g"><i class="mo-marca"></i></div>
+                <div>
+                  <p class="destaque-sobre">em destaque</p>
+                  <h3 class="destaque-nome">Mosaic Store</h3>
+                  <p class="destaque-desc">Uma loja de pacotes para o Arch Linux, com a cara do seu wallpaper. Coloca o <code>paru</code> atrás de uma interface calma: busca, AUR, PKGBUILD, instalação e o build ao vivo, sem abrir terminal.</p>
+                  <div class="destaque-acoes">
+                    <a class="mo-tecla mo-tecla--destaque" href="https://github.com/amendoa657/mosaicStore" target="_blank" rel="noopener">Ver no GitHub</a>
+                    <span class="mo-selo mo-selo--aur">PKGBUILD</span>
+                    <span>0.7.2 · GPL-3.0</span>
+                  </div>
+                </div>
+              </div>
 
-        <li class="linhaTempoItem revelar" data-img="img/ubuntu-20-04.jpg" data-legenda="2021 — quem diria que em 3 semanas eu ia quebrar o sistema particionando o HD enquanto rodava ele 👀">
-          <button type="button" class="linhaTempoAno" aria-pressed="false" aria-label="Ver imagem de 2021" aria-controls="trajetoriaPainel">2021</button>
-          <div class="linhaTempoCorpo">
-            <h3 class="linhaTempoTitulo">hello, linux</h3>
-            <p>
-              Instalei Ubuntu por curiosidade e foi meu primeiro contato com Linux. Virou meu
-              sistema principal e nunca mais voltei atrás.
-            </p>
-          </div>
-        </li>
+              <figure class="video-quadro" style="margin:0">
+                <video data-src="midia/mosaic/store-showcase.mp4" poster="midia/mosaic/store-poster.webp" muted loop playsinline preload="none" aria-label="Mosaic Store em uso: a troca de telas é uma onda de pixels que sai do clique"></video>
+                <figcaption><span>mosaic-store — a troca de telas é uma onda que sai do clique</span><span>15 s</span></figcaption>
+              </figure>
 
-        <li class="linhaTempoItem revelar" data-img="img/artixLinux.webp" data-legenda="2022 — depois disso aqui, eu descobri oq realmente era ser feliz">
-          <button type="button" class="linhaTempoAno" aria-pressed="false" aria-label="Ver imagem de 2022" aria-controls="trajetoriaPainel">2022</button>
-          <div class="linhaTempoCorpo">
-            <h3 class="linhaTempoTitulo">migrando pro arch</h3>
-            <p>
-              Troquei o Ubuntu pelo Artix e caí de vez no mundo Arch. De lá pra cá nunca mais saí.
-            </p>
-          </div>
-        </li>
+              <div class="grade-3">
+                <article class="mo-cartao mini-cartao">
+                  <video data-src="midia/mosaic/store-descobrir.mp4" poster="midia/mosaic/store-descobrir.webp" muted loop playsinline preload="none" aria-label="Cartões de pacotes caem como teclas"></video>
+                  <div><h4>Descobrir</h4><p>Destaque, populares e mais votados da AUR.</p></div>
+                </article>
+                <article class="mo-cartao mini-cartao">
+                  <video data-src="midia/mosaic/store-buscar.mp4" poster="midia/mosaic/store-buscar.webp" muted loop playsinline preload="none" aria-label="A tecla / abre a busca"></video>
+                  <div><h4>Buscar</h4><p>AUR e oficiais numa busca local em SQLite FTS5.</p></div>
+                </article>
+                <article class="mo-cartao mini-cartao">
+                  <video data-src="midia/mosaic/store-instalar.mp4" poster="midia/mosaic/store-instalar.webp" muted loop playsinline preload="none" aria-label="O botão Instalar afunda e o build avança"></video>
+                  <div><h4>Instalar com contexto</h4><p>Aviso da AUR, dependências e o build ao vivo.</p></div>
+                </article>
+              </div>
 
-        <li class="linhaTempoItem revelar" data-img="img/godotEngine.png" data-legenda="2023 — a MELHOR engine de todos os tempos, viva o opensource">
-          <button type="button" class="linhaTempoAno" aria-pressed="false" aria-label="Ver imagem de 2023" aria-controls="trajetoriaPainel">2023</button>
-          <div class="linhaTempoCorpo">
-            <h3 class="linhaTempoTitulo">godot</h3>
-            <p>
-              Primeiro contato com a engine. Comecei o Zé Gotinha Adventures refazendo, numa
-              ferramenta de verdade, o jogo que eu tinha feito aos 10 anos.
-            </p>
-          </div>
-        </li>
-
-        <li class="linhaTempoItem revelar" data-img="img/c++.png" data-legenda="2024 — Nada melhor do que uma coca, c++ e neovim">
-          <button type="button" class="linhaTempoAno" aria-pressed="false" aria-label="Ver imagem de 2024" aria-controls="trajetoriaPainel">2024</button>
-          <div class="linhaTempoCorpo">
-            <h3 class="linhaTempoTitulo">c++ e lógica</h3>
-            <p>
-              Comecei a aprender C++ e lógica de programação mais avançada. Foi quando parei de
-              só fazer funcionar e comecei a olhar para como funciona.
-            </p>
-          </div>
-        </li>
-
-        <li class="linhaTempoItem revelar" data-img="img/amigosDroids.jpg" data-legenda="2025 — Aqui foi o teste de fogo de tudo que eu ja aprendi">
-          <button type="button" class="linhaTempoAno" aria-pressed="false" aria-label="Ver imagem de 2025" aria-controls="trajetoriaPainel">2025</button>
-          <div class="linhaTempoCorpo">
-            <h3 class="linhaTempoTitulo">Amigos Droids</h3>
-            <p>
-              Fui selecionado para uma equipe de robotica autonoma mineira e participei do FTC, onde aprendi muito sobre POO, resolucao de problemas e Java.
-            </p>
-          </div>
-        </li>
-
-        <li class="linhaTempoItem linhaTempoAtual revelar" data-img="img/rice.png" data-legenda="hoje — Essa é a minha rice atual e meu ambiente de trabalho">
-          <button type="button" class="linhaTempoAno" aria-pressed="false" aria-label="Ver imagem de hoje" aria-controls="trajetoriaPainel">hoje</button>
-          <div class="linhaTempoCorpo">
-            <h3 class="linhaTempoTitulo">
-              HEAD <span class="linhaTempoRef">→ main</span>
-            </h3>
-            <p>
-              CachyOS com Hyprland numa rice minha. Competitiva em C++, jogos na Godot e back-end
-              acontecendo ao mesmo tempo — e nenhum dos três atrapalhando o outro.
-            </p>
-          </div>
-        </li>
-        </ol>
-
-        <aside class="trajetoriaPainel" id="trajetoriaPainel">
-          <figure class="painelFigura">
-            <div class="painelMoldura">
-              <img class="painelImagem" id="painelImagem"
-                   src="img/gameMaker.png" alt="2019 — primeiro contato"
-                   width="1600" height="900" loading="lazy" decoding="async">
-              <span class="painelVarredura" id="painelVarredura" aria-hidden="true"></span>
+              <div class="grade-2">
+                <figure class="video-quadro" style="margin:0">
+                  <video data-src="midia/mosaic/store-tema.mp4" poster="midia/mosaic/store-tema.webp" muted loop playsinline preload="none" aria-label="O wallpaper troca e o app se repinta numa onda de pixels"></video>
+                  <figcaption><span>tema com o Matugen</span><span>colors.css</span></figcaption>
+                </figure>
+                <div style="display:grid;gap:14px;align-content:start">
+                  <p class="rotulo-grupo">Stack <small>sem framework no front</small></p>
+                  <div class="pilha-chips">
+                    <span class="mo-chip mo-chip--tom mo-tom-1">Python</span>
+                    <span class="mo-chip mo-chip--tom mo-tom-1">Flask</span>
+                    <span class="mo-chip mo-chip--tom mo-tom-2">pywebview</span>
+                    <span class="mo-chip mo-chip--tom mo-tom-0">SQLite FTS5</span>
+                    <span class="mo-chip mo-chip--tom mo-tom-3">paru · pacman</span>
+                    <span class="mo-chip mo-chip--tom mo-tom-0">Matugen</span>
+                    <span class="mo-chip">Web Worker + OffscreenCanvas</span>
+                  </div>
+                  <p class="rotulo-grupo">O que eu decidi <small>e por quê</small></p>
+                  <p style="color:var(--mo-texto-2);font-size:14.5px">Flask + pywebview deixa front web e back Python conversarem sem atrito. O preço: ~400 MB de RAM. Pra não travar a máquina, o build roda com limite de CPU e memória configurável.</p>
+                </div>
+              </div>
             </div>
-            <figcaption class="painelLegenda" id="painelLegenda">
-              <span class="painelPrompt" aria-hidden="true">$</span>
-              <span id="painelTexto">2019 — primeiro contato</span>
-            </figcaption>
-          </figure>
-          <p class="painelDica">clique num ano da linha do tempo</p>
-        </aside>
+
+            <!-- UI -->
+            <div class="mo-painel" role="tabpanel" id="painel-ui" aria-labelledby="aba-ui" hidden>
+              <div class="destaque-app tom-terciaria">
+                <span class="mo-reticula"></span>
+                <div class="mo-icone-app mo-icone-app--g"><i class="mo-marca mo-marca--girando"></i></div>
+                <div>
+                  <p class="destaque-sobre">biblioteca</p>
+                  <h3 class="destaque-nome">Mosaic UI</h3>
+                  <p class="destaque-desc">A identidade visual saiu da loja e virou biblioteca, para qualquer app do ecossistema. Sem build, sem dependência, sem framework: copie a pasta e escreva HTML. Tudo mora em <code>@layer</code>, então o CSS do seu app sempre vence.</p>
+                  <div class="destaque-acoes">
+                    <a class="mo-tecla mo-tecla--terciaria" href="https://github.com/amendoa657/mosaicStore/tree/main/mosaic-ui" target="_blank" rel="noopener">Ver a biblioteca</a>
+                    <span>HTML · CSS · JS puro</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="numeros">
+                <div class="mo-cartao numero mo-tom-0"><strong>43</strong><span>símbolos numa grade de 9 × 9 pixels</span></div>
+                <div class="mo-cartao numero mo-tom-1"><strong>0</strong><span>dependências, zero build</span></div>
+                <div class="mo-cartao numero mo-tom-2"><strong>1</strong><span>Web Worker desenhando todos os pixels</span></div>
+              </div>
+
+              <figure class="video-quadro" style="margin:0">
+                <video data-src="midia/mosaic/ui-motion.mp4" poster="midia/mosaic/ui-poster.webp" muted loop playsinline preload="none" aria-label="Motion graphic sobre a identidade visual da Mosaic UI"></video>
+                <figcaption><span>motion graphic da Mosaic UI — apresentação do IndieSquad</span><span>14 s</span></figcaption>
+              </figure>
+
+              <pre class="codigo"><code><span class="c">&lt;!-- uma tecla que afunda, com atalho de teclado de verdade --&gt;</span>
+<span class="t">&lt;button</span> <span class="a">class</span>=<span class="v">"mo-tecla mo-tecla--destaque"</span> <span class="a">data-mo-atalho</span>=<span class="v">"enter"</span><span class="t">&gt;</span>Instalar<span class="t">&lt;/button&gt;</span>
+
+<span class="c">&lt;!-- o campo de pontos com a lente que segue o mouse --&gt;</span>
+<span class="t">&lt;mo-pixels</span> <span class="a">passo</span>=<span class="v">"15"</span> <span class="a">lente</span>=<span class="v">"150"</span><span class="t">&gt;&lt;/mo-pixels&gt;</span>
+
+<span class="c">// a onda de pixels, a partir do clique</span>
+<span class="t">await</span> revelar(painel, { x, y, trocar: () =&gt; render() });</code></pre>
+
+              <div style="display:grid;gap:10px">
+                <p class="rotulo-grupo">Usada em <small>a mesma cara em todo lugar</small></p>
+                <div class="pilha-chips">
+                  <span class="mo-chip mo-chip--tom mo-tom-0">Mosaic Store</span>
+                  <span class="mo-chip mo-chip--tom mo-tom-2">Mosaic OS</span>
+                  <span class="mo-chip mo-chip--tom mo-tom-1">IndieSquad</span>
+                  <span class="mo-chip mo-chip--tom mo-tom-3">este portfólio</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- OS -->
+            <div class="mo-painel" role="tabpanel" id="painel-os" aria-labelledby="aba-os" hidden>
+              <div class="destaque-app tom-destaque">
+                <span class="mo-reticula"></span>
+                <div class="mo-icone-app mo-icone-app--g"><i class="mo-marca"></i></div>
+                <div>
+                  <p class="destaque-sobre">desktop · minha segunda rice</p>
+                  <h3 class="destaque-nome">Mosaic OS</h3>
+                  <p class="destaque-desc">Um shell em Quickshell para o Hyprland: uma ilha líquida que se transforma com física de mola, um dock de vidro e temas que trocam as cores <em>e</em> as formas. Pinta o shell, as bordas do Hyprland, o kitty, o Neovim, a Mosaic Store e o navegador.</p>
+                  <div class="destaque-acoes">
+                    <a class="mo-tecla mo-tecla--destaque" href="https://github.com/amendoa657/mosaicOS" target="_blank" rel="noopener">Ver no GitHub</a>
+                    <span>QML · Hyprland · Matugen</span>
+                  </div>
+                </div>
+              </div>
+
+              <figure class="video-quadro" style="margin:0">
+                <div style="position:relative" id="osQuadro">
+                  <img id="osImagem" data-src="midia/os/themes-tour.webp" src="midia/os/mosaic-desktop.webp" alt="Troca de temas: os widgets do desktop se redesenham" width="1920" height="1080" loading="lazy" decoding="async">
+                </div>
+                <figcaption><span id="osLegenda">tour pelos temas — os widgets se redesenham sozinhos</span><span>Super Alt T</span></figcaption>
+              </figure>
+
+              <div class="temas-os" role="group" aria-label="Temas do Mosaic OS">
+                <button type="button" class="tema-os" aria-pressed="true" data-img="midia/os/themes-tour.webp" data-legenda="tour pelos temas — os widgets se redesenham sozinhos"><img src="midia/os/desk-mosaic.webp" alt="" loading="lazy"><span>Tour<small>todos os temas</small></span></button>
+                <button type="button" class="tema-os" aria-pressed="false" data-img="midia/os/wallpaper-wave.webp" data-legenda="mosaic — o wallpaper novo chega na onda de pixels da mosaic-ui"><img src="midia/os/mosaic-desktop.webp" alt="" loading="lazy"><span>Mosaic<small>blocos e a onda</small></span></button>
+                <button type="button" class="tema-os" aria-pressed="false" data-img="midia/os/desk-gruvbox.webp" data-legenda="gruvbox — neo-brutalismo quente, sombras laranja duras"><img src="midia/os/desk-gruvbox.webp" alt="" loading="lazy"><span>Gruvbox<small>neo-brutalismo</small></span></button>
+                <button type="button" class="tema-os" aria-pressed="false" data-img="midia/os/horizonte-desktop.webp" data-legenda="horizonte — pôr do sol dos anos 70, títulos serifados e grão de filme"><img src="midia/os/desk-horizonte.webp" alt="" loading="lazy"><span>Horizonte<small>anos 70, grão</small></span></button>
+              </div>
+
+              <div class="grade-2">
+                <article class="mo-cartao mini-cartao">
+                  <img src="midia/os/island-dev.webp" alt="Commit, push e Claude Code aparecendo na ilha" loading="lazy">
+                  <div><h4>A ilha segue o seu trabalho</h4><p>Commits e pushes aparecem na ilha por um hook global do git; notificações pingam como bolhas líquidas (shaders SDF).</p></div>
+                </article>
+                <article class="mo-cartao mini-cartao">
+                  <img src="midia/os/mosaic-island.webp" alt="A ilha do Mosaic OS no tema Mosaic" loading="lazy">
+                  <div><h4>Leve com a GPU</h4><p>Nada anima sozinho quando você não está olhando. O campo de pontos só se mexe quando você clica no desktop.</p></div>
+                </article>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="mo-app-rodape">
+          <span><span class="mo-pulso"></span> 3 projetos · uma identidade</span>
+          <span>Space Grotesk + JetBrains Mono</span>
+        </div>
       </div>
-    </div>
-  </section>
 
-  <!-- ============ STACK ============ -->
-  <section class="secao" id="stack">
-    <div class="contentor">
-      <header class="secaoCabecalho revelar">
-        <span class="secaoNumero">03</span>
-        <h2 class="secaoTitulo">Stack</h2>
-        <span class="secaoRegua"></span>
-        <span class="secaoComando">tree ~/stack</span>
-      </header>
-
-      <p class="secaoIntro revelar">
-        Onde cada coisa realmente aparece no meu dia —
-        <span class="legendaChip"><span class="chip chipPrincipal">destacado</span> é o que uso com frequência</span>.
-      </p>
-
-      <div class="stackGrade">
-        <article class="stackCartao revelar">
-          <h3 class="stackCaminho">~/competitiva</h3>
-          <p class="stackNota">Foi aqui aonde eu aprendi a pensar em custo.</p>
-          <ul class="stackChips">
-            <li class="chip chipPrincipal">C++</li>
-            <li class="chip chipPrincipal">algoritmos</li>
-            <li class="chip chipPrincipal">estruturas de dados</li>
-            <li class="chip">STL</li>
-            <li class="chip">matemática</li>
-          </ul>
-        </article>
-
-        <article class="stackCartao revelar">
-          <h3 class="stackCaminho">~/gamedev</h3>
-          <p class="stackNota">Onde tudo começou. Godot é onde passo mais tempo.</p>
-          <ul class="stackChips">
-            <li class="chip chipPrincipal">Godot</li>
-            <li class="chip chipPrincipal">GDScript</li>
-            <li class="chip">C#</li>
-            <li class="chip">Pygame</li>
-            <li class="chip">GameMaker</li>
-          </ul>
-        </article>
-
-        <article class="stackCartao revelar">
-          <h3 class="stackCaminho">~/web</h3>
-          <p class="stackNota">Back-end é onde me sinto em casa, mas encaro o front sem drama.</p>
-          <ul class="stackChips">
-            <li class="chip chipPrincipal">Flask</li>
-            <li class="chip chipPrincipal">Python</li>
-            <li class="chip chipPrincipal">SQL</li>
-            <li class="chip">Laravel</li>
-            <li class="chip">PHP</li>
-            <li class="chip">HTML</li>
-            <li class="chip">CSS</li>
-            <li class="chip">JavaScript</li>
-            <li class="chip">SQLAlchemy</li>
-          </ul>
-        </article>
-
-        <article class="stackCartao revelar">
-          <h3 class="stackCaminho">~/sistema</h3>
-          <p class="stackNota">Ambiente de trabalho, não hobby. Quase tudo passa por aqui.</p>
-          <ul class="stackChips">
-            <li class="chip chipPrincipal">Linux</li>
-            <li class="chip chipPrincipal">Bash</li>
-            <li class="chip chipPrincipal">Git</li>
-            <li class="chip chipPrincipal">Neovim</li>
-            <li class="chip">Hyprland</li>
-            <li class="chip">C</li>
-          </ul>
-        </article>
-      </div>
+      <aside class="nota-ia revelar">
+        <i class="mo-marca mo-marca--fraca" aria-hidden="true"></i>
+        <p><b>Sobre o uso de IA.</b> A direção de arte, as paletas, os layouts, as animações e o nome da Mosaic são meus — cada tela começou como esboço meu. Boa parte do código de front-end e do QML foi escrita com a ajuda de IA, e eu conto isso em cada README.</p>
+      </aside>
     </div>
   </section>
 
   <!-- ============ PROJETOS ============ -->
-  <section class="secao" id="projetos">
+  <section class="secao" id="projetos" aria-labelledby="tituloProjetos">
     <div class="contentor">
-      <header class="secaoCabecalho revelar">
-        <span class="secaoNumero">04</span>
-        <h2 class="secaoTitulo">Projetos</h2>
-        <span class="secaoRegua"></span>
-        <span class="secaoComando">ls ~/projetos</span>
+      <header class="secao-cabecalho mo-tom-3">
+        <div class="secao-topo revelar"><span class="secao-numero">04</span><span class="secao-comando">ls ~/projetos</span></div>
+        <h2 class="secao-titulo" id="tituloProjetos" data-pixel-texto>Mais <em>projetos</em></h2>
+        <p class="secao-intro revelar">Cada um é um pacote: o que resolve, com o que foi feito e o que me ensinou.</p>
       </header>
 
-      <!-- destaque -->
-      <article class="projetoCartao projetoDestaque revelar">
-        <div class="projetoConteudo">
-          <div class="projetoEtiqueta">destaque</div>
-          <h3 class="projetoNome">
-            <a href="https://github.com/amendoa657/ZeGotinhaGame" target="_blank" rel="noopener">
-              Zé Gotinha
-            </a>
-          </h3>
-          <p class="projetoDescricao">
-            Fiz esse jogo em 2019 no GameMaker Studio 2, com 10 anos de idade, e o resultado foi
-            exatamente o que se espera. Anos depois eu lembrei dele e refiz do zero na Godot —
-            não pra lançar, mas pra ver de perto o que tinha mudado no meio do caminho.
-            É o projeto que melhor mostra como eu aprendo: refazendo até entender.
-          </p>
-          <ul class="projetoStack">
-            <li>Godot</li><li>GDScript</li><li>pixel art</li>
-          </ul>
+      <article class="mo-cartao projeto-destaque revelar">
+        <div class="projeto-destaque-arte">
+          <img src="midia/projetos/zegotinha-voo.png" alt="Zé Gotinha voando pelo céu, em pixel art" width="297" height="181" loading="lazy">
+          <div class="evolucao-selos"><span class="mo-selo mo-selo--vivo">destaque</span></div>
         </div>
-        <footer class="projetoRodape">
-          <span class="projetoLinguagem">
-            <span class="pontoLinguagem" style="--cor:#355570"></span> GDScript
-          </span>
-          <div class="projetoLinks">
-            <a href="https://github.com/amendoa657/ZeGotinhaGame" class="projetoLink" target="_blank" rel="noopener">
-              código
-            </a>
-          </div>
-        </footer>
+        <div class="projeto-destaque-corpo">
+          <p class="rotulo">jogo · godot · gdscript</p>
+          <h3>Zé Gotinha</h3>
+          <p>Fiz esse jogo em 2019, com 10 anos, no GameMaker — e saiu exatamente o que se espera. Anos depois refiz do zero na Godot, não pra lançar, mas pra ver de perto o que tinha mudado no caminho. É o projeto que melhor mostra como eu aprendo.</p>
+          <div class="antes-depois"><span><b>2019</b> GameMaker</span><span class="seta"></span><span><b>2023</b> Godot</span></div>
+          <div><a class="mo-tecla mo-tecla--terciaria" href="https://github.com/amendoa657/ZeGotinhaGame" target="_blank" rel="noopener">Abrir o repositório</a></div>
+        </div>
       </article>
 
-      <div class="projetosGrade">
-
-        <article class="projetoCartao revelar">
-          <div class="projetoConteudo">
-            <h3 class="projetoNome">
-              <a href="https://github.com/amendoa657/RaycastingGame" target="_blank" rel="noopener">
-                Raycasting Game
-              </a>
-            </h3>
-            <p class="projetoDescricao">
-              Recriei a técnica do Wolfenstein 3D em Pygame: o mapa é 2D, mas cada coluna da tela
-              é um raio lançado contra a parede, e a distância vira altura. Foi assim que entendi
-              projeção e correção de fisheye sem depender de engine.
-            </p>
-            <ul class="projetoStack"><li>Python</li><li>Pygame</li><li>matemática</li></ul>
-          </div>
-          <footer class="projetoRodape">
-            <span class="projetoLinguagem"><span class="pontoLinguagem" style="--cor:#3572A5"></span> Python</span>
-            <div class="projetoLinks">
-              <a href="https://github.com/amendoa657/RaycastingGame" class="projetoLink" target="_blank" rel="noopener">código</a>
-            </div>
-          </footer>
-        </article>
-
-        <article class="projetoCartao revelar">
-          <div class="projetoConteudo">
-            <h3 class="projetoNome">
-              <a href="https://github.com/amendoa657/SiteGrid" target="_blank" rel="noopener">
-                Site Grid
-              </a>
-            </h3>
-            <p class="projetoDescricao">
-              Site que progamei usando display Grid, criei diversas animacoes usando apenas css! Considero esse o site mais arrumadinho do meu github ate entao.
-            </p>
-            <ul class="projetoStack"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
-          </div>
-          <footer class="projetoRodape">
-            <span class="projetoLinguagem"><span class="pontoLinguagem" style="--cor:#f7b759"></span> HTML</span>
-            <div class="projetoLinks">
-              <a href="https://github.com/amendoa657/SiteGrid" class="projetoLink" target="_blank" rel="noopener">código</a>
-            </div>
-          </footer>
-        </article>
-
-        <article class="projetoCartao revelar">
-          <div class="projetoConteudo">
-            <h3 class="projetoNome">
-              <a href="https://github.com/amendoa657/Criptografia" target="_blank" rel="noopener">
-                Criptografia por Matrizes
-              </a>
-            </h3>
-            <p class="projetoDescricao">
-              Cifra escrita em C++ onde a chave é uma matriz: o texto vira vetor numérico e a
-              codificação é multiplicação. Para voltar, precisa da inversa. Saiu de uma aula de
-              álgebra que eu decidi levar até o compilador.
-            </p>
-            <ul class="projetoStack"><li>C++</li><li>álgebra linear</li></ul>
-          </div>
-          <footer class="projetoRodape">
-            <span class="projetoLinguagem"><span class="pontoLinguagem" style="--cor:#f34b7d"></span> C++</span>
-            <div class="projetoLinks">
-              <a href="https://github.com/amendoa657/Criptografia" class="projetoLink" target="_blank" rel="noopener">código</a>
-            </div>
-          </footer>
-        </article>
-
-        <article class="projetoCartao revelar">
-          <div class="projetoConteudo">
-            <h3 class="projetoNome">
-              <a href="https://github.com/amendoa657/sqlAlchemyCrud" target="_blank" rel="noopener">
-                CRUD com SQLAlchemy
-              </a>
-            </h3>
-            <p class="projetoDescricao">
-              Cadastro de alunos com Flask nas rotas e SQLAlchemy modelando as tabelas. É o
-              projeto em que parei de escrever SQL na mão e entendi o que um ORM resolve — e o
-              que ele esconde de você.
-            </p>
-            <ul class="projetoStack"><li>Flask</li><li>SQLAlchemy</li><li>SQLite</li></ul>
-          </div>
-          <footer class="projetoRodape">
-            <span class="projetoLinguagem"><span class="pontoLinguagem" style="--cor:#3572A5"></span> Python</span>
-            <div class="projetoLinks">
-              <a href="https://github.com/amendoa657/sqlAlchemyCrud" class="projetoLink" target="_blank" rel="noopener">código</a>
-            </div>
-          </footer>
-        </article>
-
-        <article class="projetoCartao revelar">
-          <div class="projetoConteudo">
-            <h3 class="projetoNome">
-              <a href="https://github.com/amendoa657/laravelApiRest" target="_blank" rel="noopener">
-                API REST em Laravel
-              </a>
-            </h3>
-            <p class="projetoDescricao">
-              Meu caminho completo dentro do Laravel: rotas, controllers, migrations e Eloquent.
-              Serviu pra sair do PHP em script solto e entender o que um framework opinativo
-              decide por você.
-            </p>
-            <ul class="projetoStack"><li>Laravel</li><li>PHP</li><li>Blade</li></ul>
-          </div>
-          <footer class="projetoRodape">
-            <span class="projetoLinguagem"><span class="pontoLinguagem" style="--cor:#4F5D95"></span> PHP</span>
-            <div class="projetoLinks">
-              <a href="https://github.com/amendoa657/laravelApiRest" class="projetoLink" target="_blank" rel="noopener">código</a>
-            </div>
-          </footer>
-        </article>
-
-        <article class="projetoCartao revelar">
-          <div class="projetoConteudo">
-            <h3 class="projetoNome">
-              <a href="https://github.com/amendoa657/NerdsAdventure" target="_blank" rel="noopener">
-                Nerds Adventure
-              </a>
-              <span class="projetoStatus">em progresso</span>
-            </h3>
-            <p class="projetoDescricao">
-              Ideia de jogo que carrego há alguns anos e que ainda estou construindo na Godot.
-              Está aqui porque portfólio honesto também mostra o que ainda não está pronto.
-            </p>
-            <ul class="projetoStack"><li>Godot</li><li>GDScript</li></ul>
-          </div>
-          <footer class="projetoRodape">
-            <span class="projetoLinguagem"><span class="pontoLinguagem" style="--cor:#355570"></span> GDScript</span>
-            <div class="projetoLinks">
-              <a href="https://github.com/amendoa657/NerdsAdventure" class="projetoLink" target="_blank" rel="noopener">código</a>
-            </div>
-          </footer>
-        </article>
-
+      <div class="projetos-ferramentas revelar">
+        <label class="mo-busca">
+          <span class="acessivel-oculto">Buscar projetos</span>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="7" cy="7" r="4.8"/><path d="m10.5 10.5 3 3"/></svg>
+          <input type="search" id="buscaProjetos" placeholder="Buscar projetos" autocomplete="off" spellcheck="false">
+          <kbd class="mo-atalho" aria-hidden="true">/</kbd>
+        </label>
+        <div class="filtros" role="group" aria-label="Filtrar por área">
+          <button type="button" class="mo-chip" data-filtro="todos" aria-pressed="true">todos</button>
+          <button type="button" class="mo-chip" data-filtro="jogos" aria-pressed="false">jogos</button>
+          <button type="button" class="mo-chip" data-filtro="web" aria-pressed="false">web</button>
+          <button type="button" class="mo-chip" data-filtro="sistemas" aria-pressed="false">sistemas</button>
+          <button type="button" class="mo-chip" data-filtro="algoritmos" aria-pressed="false">algoritmos</button>
+        </div>
       </div>
 
-      <p class="projetoNota revelar">
-        Tem bastante coisa que não coube aqui, entre experimentos e trabalhos de escola —
-        <a href="https://github.com/amendoa657?tab=repositories" target="_blank" rel="noopener">o resto está no GitHub</a>.
-      </p>
+      <div class="projetos-grade" id="projetosGrade">
+        <article class="mo-cartao mo-cartao--interativo projeto mo-tom-1" data-area="web" data-busca="indiesquad flask mysql equipe jogos indie plataforma">
+          <div class="projeto-imagem"><img src="midia/projetos/indiesquad-busca.webp" alt="Tela de busca de profissionais do IndieSquad" loading="lazy"></div>
+          <div class="projeto-topo"><span class="mo-icone-app">I</span><div><h3>IndieSquad</h3><span class="versao">2026 · equipe de 6</span></div></div>
+          <p class="projeto-desc">Plataforma para montar equipes de jogos indie, com compatibilidade calculada e reputação. Back-end em quatro camadas — controller, service, repository, model — e o front com a Mosaic UI.</p>
+          <div class="projeto-rodape"><div class="pilha-chips"><span class="mo-chip">Flask</span><span class="mo-chip">MySQL</span></div><a class="mo-tecla mo-tecla--p" href="https://github.com/amendoa657/indieSquad" target="_blank" rel="noopener">Abrir</a></div>
+        </article>
+
+        <article class="mo-cartao mo-cartao--interativo projeto mo-tom-2" data-area="sistemas" data-busca="tuxassist assistente voz linux python whisper groq jarvis">
+          <div class="projeto-topo"><span class="mo-icone-app"><img src="midia/projetos/tux.svg" alt=""></span><div><h3>TuxAssist</h3><span class="versao">2026 · experimento</span></div></div>
+          <p class="projeto-desc">Assistente de voz para Linux: fica ouvindo “hey jarvis” com um modelo local, grava até o silêncio, monta o WAV em memória, transcreve com Whisper e responde numa notificação do GNOME.</p>
+          <div class="projeto-rodape"><div class="pilha-chips"><span class="mo-chip">Python</span><span class="mo-chip">ONNX</span></div><a class="mo-tecla mo-tecla--p" href="https://github.com/amendoa657/tuxAssist" target="_blank" rel="noopener">Abrir</a></div>
+        </article>
+
+        <article class="mo-cartao mo-cartao--interativo projeto mo-tom-0" data-area="jogos" data-busca="nerds adventure godot gdscript jogo">
+          <div class="projeto-topo"><span class="mo-icone-app">N</span><div><h3>Nerds Adventure</h3><span class="versao">em progresso</span></div></div>
+          <p class="projeto-desc">Uma ideia de jogo que carrego há anos e ainda estou construindo na Godot. Está aqui porque portfólio honesto também mostra o que não está pronto.</p>
+          <div class="projeto-rodape"><div class="pilha-chips"><span class="mo-chip">Godot</span><span class="mo-chip">GDScript</span></div><a class="mo-tecla mo-tecla--p" href="https://github.com/amendoa657/NerdsAdventure" target="_blank" rel="noopener">Abrir</a></div>
+        </article>
+
+        <article class="mo-cartao mo-cartao--interativo projeto mo-tom-3" data-area="jogos algoritmos" data-busca="raycasting wolfenstein pygame python matematica">
+          <div class="projeto-topo"><span class="mo-icone-app">R</span><div><h3>Raycasting Game</h3><span class="versao">python · pygame</span></div></div>
+          <p class="projeto-desc">A técnica do Wolfenstein 3D em Pygame: cada coluna da tela é um raio contra a parede, e a distância vira altura. Foi assim que entendi projeção e correção de fisheye sem engine.</p>
+          <div class="projeto-rodape"><div class="pilha-chips"><span class="mo-chip">Python</span><span class="mo-chip">Pygame</span></div><a class="mo-tecla mo-tecla--p" href="https://github.com/amendoa657/RaycastingGame" target="_blank" rel="noopener">Abrir</a></div>
+        </article>
+
+        <article class="mo-cartao mo-cartao--interativo projeto mo-tom-1" data-area="algoritmos" data-busca="criptografia matrizes c++ algebra linear">
+          <div class="projeto-topo"><span class="mo-icone-app">C</span><div><h3>Criptografia por Matrizes</h3><span class="versao">c++</span></div></div>
+          <p class="projeto-desc">Uma cifra onde a chave é uma matriz: o texto vira vetor e codificar é multiplicar. Pra voltar, a inversa. Saiu de uma aula de álgebra que eu levei até o compilador.</p>
+          <div class="projeto-rodape"><div class="pilha-chips"><span class="mo-chip">C++</span><span class="mo-chip">álgebra</span></div><a class="mo-tecla mo-tecla--p" href="https://github.com/amendoa657/Criptografia" target="_blank" rel="noopener">Abrir</a></div>
+        </article>
+
+        <article class="mo-cartao mo-cartao--interativo projeto mo-tom-2" data-area="web" data-busca="laravel api rest php eloquent migrations">
+          <div class="projeto-topo"><span class="mo-icone-app">L</span><div><h3>API REST em Laravel</h3><span class="versao">php · blade</span></div></div>
+          <p class="projeto-desc">O caminho completo no Laravel: rotas, controllers, migrations e Eloquent. Serviu pra entender o que um framework opinativo decide por você.</p>
+          <div class="projeto-rodape"><div class="pilha-chips"><span class="mo-chip">Laravel</span><span class="mo-chip">PHP</span></div><a class="mo-tecla mo-tecla--p" href="https://github.com/amendoa657/laravelApiRest" target="_blank" rel="noopener">Abrir</a></div>
+        </article>
+
+        <article class="mo-cartao mo-cartao--interativo projeto mo-tom-0" data-area="web" data-busca="crud sqlalchemy flask orm sqlite python">
+          <div class="projeto-topo"><span class="mo-icone-app">S</span><div><h3>CRUD com SQLAlchemy</h3><span class="versao">flask · orm</span></div></div>
+          <p class="projeto-desc">Cadastro de alunos com Flask nas rotas e SQLAlchemy nas tabelas. O projeto em que parei de escrever SQL na mão e entendi o que um ORM resolve — e o que ele esconde.</p>
+          <div class="projeto-rodape"><div class="pilha-chips"><span class="mo-chip">Flask</span><span class="mo-chip">SQLite</span></div><a class="mo-tecla mo-tecla--p" href="https://github.com/amendoa657/sqlAlchemyCrud" target="_blank" rel="noopener">Abrir</a></div>
+        </article>
+
+        <article class="mo-cartao mo-cartao--interativo projeto mo-tom-3" data-area="sistemas" data-busca="ftcsim electron robotica ftc amigos droids simulador">
+          <div class="projeto-topo"><span class="mo-icone-app">F</span><div><h3>FtcSim Electron</h3><span class="versao">2025 · robótica</span></div></div>
+          <p class="projeto-desc">Da época da robótica na FTC: transformei o simulador FtcSim num app de desktop com Electron — com uma boa ajuda de IA, porque eu não sabia nada de Electron.</p>
+          <div class="projeto-rodape"><div class="pilha-chips"><span class="mo-chip">Electron</span><span class="mo-chip">JS</span></div><a class="mo-tecla mo-tecla--p" href="https://github.com/amendoa657/FtcSimElectron" target="_blank" rel="noopener">Abrir</a></div>
+        </article>
+
+        <article class="mo-cartao mo-cartao--interativo projeto mo-tom-1" data-area="web" data-busca="site grid css animacoes html">
+          <div class="projeto-topo"><span class="mo-icone-app">G</span><div><h3>Site Grid</h3><span class="versao">html · css</span></div></div>
+          <p class="projeto-desc">Um site inteiro em CSS Grid, com animações feitas só em CSS. Foi onde eu comecei a ligar pra movimento — bem antes da Mosaic ter regras.</p>
+          <div class="projeto-rodape"><div class="pilha-chips"><span class="mo-chip">CSS</span><span class="mo-chip">HTML</span></div><a class="mo-tecla mo-tecla--p" href="https://github.com/amendoa657/SiteGrid" target="_blank" rel="noopener">Abrir</a></div>
+        </article>
+      </div>
+
+      <div class="mo-vazio" id="projetosVazio" hidden>
+        <i class="mo-marca mo-marca--fraca"></i>
+        <p>Nenhum projeto com esse nome. <br>Tenta <code>godot</code>, <code>flask</code> ou <code>c++</code>.</p>
+      </div>
+
+      <p class="projetos-nota revelar">Tem bastante coisa que não coube aqui, entre experimentos e trabalhos de escola — <a href="https://github.com/amendoa657?tab=repositories" target="_blank" rel="noopener">o resto está no GitHub</a>.</p>
+    </div>
+  </section>
+
+  <!-- ============ STACK ============ -->
+  <section class="secao" id="stack" aria-labelledby="tituloStack">
+    <div class="contentor">
+      <header class="secao-cabecalho mo-tom-0">
+        <div class="secao-topo revelar"><span class="secao-numero">05</span><span class="secao-comando">tree ~/stack</span></div>
+        <h2 class="secao-titulo" id="tituloStack" data-pixel-texto>O <em>teclado</em></h2>
+        <p class="secao-intro revelar">Minha stack é um teclado. Aperte uma tecla para ver onde ela aparece de verdade. As coloridas são as que eu uso todo dia.</p>
+      </header>
+
+      <div class="mo-cartao teclado-cartao revelar">
+        <div class="teclado" id="teclado">
+          <div class="teclado-grupo mo-tom-0">
+            <span class="rotulo"><i></i>~/gamedev</span>
+            <div class="teclado-linha">
+              <button type="button" class="mo-tecla principal" data-onde="Zé Gotinha, Nerds Adventure|onde tudo começou — é a engine onde mais passo tempo">Godot</button>
+              <button type="button" class="mo-tecla principal" data-onde="Zé Gotinha, Nerds Adventure|a linguagem da Godot, todo santo dia">GDScript</button>
+              <button type="button" class="mo-tecla" data-onde="Ativades-Csharp|exercícios da escola">C#</button>
+              <button type="button" class="mo-tecla" data-onde="Raycasting Game|pra entender o que uma engine faz por mim">Pygame</button>
+              <button type="button" class="mo-tecla" data-onde="Zé Gotinha (2019)|o começo de tudo, no 5º ano">GameMaker</button>
+            </div>
+          </div>
+          <div class="teclado-grupo mo-tom-1">
+            <span class="rotulo"><i></i>~/web</span>
+            <div class="teclado-linha">
+              <button type="button" class="mo-tecla principal" data-onde="Mosaic Store, IndieSquad, CRUD SQLAlchemy|back-end é onde me sinto em casa">Flask</button>
+              <button type="button" class="mo-tecla principal" data-onde="Mosaic Store, TuxAssist, IndieSquad|a linguagem que eu mais escrevo fora da Godot">Python</button>
+              <button type="button" class="mo-tecla principal" data-onde="Mosaic Store (FTS5), IndieSquad (MySQL)|busca full-text local e consultas no Repository">SQL</button>
+              <button type="button" class="mo-tecla principal" data-onde="Mosaic UI, Mosaic Store, este portfólio|sem framework: @layer, :has(), color-mix()">CSS</button>
+              <button type="button" class="mo-tecla" data-onde="Mosaic UI, este portfólio|vanilla, Web Workers e canvas">JavaScript</button>
+              <button type="button" class="mo-tecla" data-onde="API REST em Laravel|rotas, controllers, migrations e Eloquent">Laravel</button>
+              <button type="button" class="mo-tecla" data-onde="API REST em Laravel|o PHP que virou framework">PHP</button>
+            </div>
+          </div>
+          <div class="teclado-grupo mo-tom-2">
+            <span class="rotulo"><i></i>~/competitiva</span>
+            <div class="teclado-linha">
+              <button type="button" class="mo-tecla principal" data-onde="competitiva, Criptografia por Matrizes|quando o limite é um segundo, você pensa em custo">C++</button>
+              <button type="button" class="mo-tecla principal" data-onde="competitiva|complexidade antes de sintaxe">Algoritmos</button>
+              <button type="button" class="mo-tecla" data-onde="competitiva|vector, map, set, priority_queue">STL</button>
+              <button type="button" class="mo-tecla" data-onde="Amigos Droids (FTC)|POO e resolução de problema sob pressão">Java</button>
+            </div>
+          </div>
+          <div class="teclado-grupo mo-tom-3">
+            <span class="rotulo"><i></i>~/sistema</span>
+            <div class="teclado-linha">
+              <button type="button" class="mo-tecla principal" data-onde="CachyOS, desde 2021|ambiente de trabalho, não hobby">Linux</button>
+              <button type="button" class="mo-tecla principal" data-onde="Mosaic OS|Quickshell: a ilha, o dock e os temas">QML</button>
+              <button type="button" class="mo-tecla principal" data-onde="tudo|commits que contam uma história">Git</button>
+              <button type="button" class="mo-tecla" data-onde="Mosaic OS|a rice que virou projeto">Hyprland</button>
+              <button type="button" class="mo-tecla" data-onde="o editor|o dia inteiro aqui dentro">Neovim</button>
+              <button type="button" class="mo-tecla" data-onde="Mosaic Store, Mosaic OS|as cores que vêm do wallpaper">Matugen</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="teclado-tela">
+          <p class="rotulo">saída</p>
+          <div class="saida" id="tecladoSaida" aria-live="polite">
+            <div class="linha"><span class="seta">›</span> aperte uma tecla<span class="mo-caret"></span></div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- ============ CONTATO ============ -->
-  <section class="secao secaoContato" id="contato">
+  <section class="secao contato" id="contato" aria-labelledby="tituloContato">
     <div class="contentor">
-      <header class="secaoCabecalho revelar">
-        <span class="secaoNumero">05</span>
-        <h2 class="secaoTitulo">Contato</h2>
-        <span class="secaoRegua"></span>
-        <span class="secaoComando">whois italo</span>
+      <header class="secao-cabecalho mo-tom-1">
+        <div class="secao-topo revelar"><span class="secao-numero">06</span><span class="secao-comando">whois italo</span></div>
       </header>
 
-      <div class="contatoCaixa revelar">
-        <p class="contatoChamada">
-          Estou aberto a oportunidades, estagio, freelancer e projeto de jogo com gente que leva a sério.
-          Respondo mais rápido por telefone.
-        </p>
+      <div class="mo-cartao contato-caixa revelar">
+        <span class="mo-reticula"></span>
+        <div style="position:relative">
+          <h2 class="contato-titulo" id="tituloContato" data-pixel-texto>Bora construir <em>algo?</em></h2>
+          <p class="contato-chamada">Estou aberto a estágio, freela e projeto de jogo com gente que leva a sério. Respondo mais rápido pelo WhatsApp.</p>
+        </div>
 
-        <ul class="contatoLista">
-          <li class="contatoItem">
-            <span class="contatoChave">email</span>
-            <a href="mailto:italocisarpinheiro@gmail.com">italocisarpinheiro@gmail.com</a>
-            <button type="button" class="botaoCopiar" id="botaoCopiarEmail" data-valor="italocisarpinheiro@gmail.com">
-              copiar
-            </button>
+        <ul class="contato-lista">
+          <li class="contato-item mo-tom-0">
+            <span class="mo-icone-app">@</span>
+            <div><small>e-mail</small><a class="valor" href="mailto:italocisarpinheiro@gmail.com">italocisarpinheiro@gmail.com</a></div>
+            <button type="button" class="mo-tecla mo-tecla--p" data-copiar="italocisarpinheiro@gmail.com" data-aviso="E-mail copiado">copiar</button>
           </li>
-          <li class="contatoItem">
-            <span class="contatoChave">github</span>
-            <a href="https://github.com/amendoa657" target="_blank" rel="noopener">github.com/amendoa657</a>
+          <li class="contato-item mo-tom-1">
+            <span class="mo-icone-app">W</span>
+            <div><small>whatsapp</small><a class="valor" href="https://wa.me/5531984404377" target="_blank" rel="noopener">(31) 98440-4377</a></div>
+            <button type="button" class="mo-tecla mo-tecla--p" data-copiar="31984404377" data-aviso="Telefone copiado">copiar</button>
           </li>
-          <li class="contatoItem">
-            <span class="contatoChave">linkedin</span>
-            <a href="https://www.linkedin.com/in/italo-cunha-028baa356/" target="_blank" rel="noopener">italo-cunha</a>
+          <li class="contato-item mo-tom-2">
+            <span class="mo-icone-app">in</span>
+            <div><small>linkedin</small><a class="valor" href="https://www.linkedin.com/in/italo-cunha-028baa356/" target="_blank" rel="noopener">italo-cunha</a></div>
           </li>
-          <li class="contatoItem">
-            <span class="contatoChave">telefone</span>
-            <a href="https://wa.me/5531984404377" target="_blank" rel="noopener">(31)98440-4377</a>
-            <button type="button" class="botaoCopiar" id="botaoCopiarTelefone" data-valor="31984404377">
-              copiar
-            </button>
+          <li class="contato-item mo-tom-3">
+            <span class="mo-icone-app">gh</span>
+            <div><small>github</small><a class="valor" href="https://github.com/amendoa657" target="_blank" rel="noopener">github.com/amendoa657</a></div>
           </li>
         </ul>
       </div>
     </div>
   </section>
-
 </main>
 
 <footer class="rodape">
-  <div class="contentor rodapeConteudo">
-    <span>© <span id="ano"></span> Italo Cunha</span>
-    <span class="rodapeMeta">escrito à mão em HTML, CSS e JavaScript · sem framework</span>
+  <div class="contentor rodape-interno">
+    <span><i class="mo-marca mo-marca--viva"></i> © <span id="ano">2026</span> Italo Cunha</span>
+    <span>feito à mão com a estética da Mosaic UI · sem framework</span>
   </div>
 </footer>
 
-<button class="voltarTopo" id="voltarTopo" aria-label="Voltar ao topo">
-  <span aria-hidden="true">↑</span>
-</button>
+<!-- ============ TERMINAL ============ -->
+<dialog class="painel-terminal" id="terminal" aria-label="Terminal">
+  <div class="terminal-cabecalho">
+    <i class="mo-marca mo-marca--girando" style="--mo-marca-tamanho:13px" aria-hidden="true"></i>
+    italo@cachyos — fish
+    <button type="button" class="mo-tecla mo-tecla--p mo-tecla--sutil" id="fecharTerminal">fechar <kbd class="mo-atalho">Esc</kbd></button>
+  </div>
+  <div class="terminal-corpo" id="terminalCorpo">
+    <div id="terminalHistorico" role="log" aria-live="polite"></div>
+    <form class="terminal-entrada" id="terminalForm" autocomplete="off">
+      <span class="prompt" aria-hidden="true"><b>italo</b>@cachyos<i>:</i><u>~</u><i>$</i></span>
+      <input id="terminalEntrada" type="text" aria-label="Digite um comando. Use help para ver a lista." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go">
+    </form>
+  </div>
+</dialog>
 
-<script src="js/rodape.js" defer></script>
-<script src="js/temaAcento.js" defer></script>
-<script src="js/trajetoriaImagens.js" defer></script>
-<script src="js/simbolosFlutuantes.js" defer></script>
+<div class="mo-avisos" id="avisos" role="status" aria-live="polite"></div>
+
+<script src="js/pixels.js" defer></script>
+<script src="js/tema.js" defer></script>
+<script src="js/pixelTexto.js" defer></script>
+<script src="js/interface.js" defer></script>
+<script src="js/evolucao.js" defer></script>
+<script src="js/ecossistema.js" defer></script>
 <script src="js/terminal.js" defer></script>
-<script src="js/menuMobile.js" defer></script>
-<script src="js/navegacaoAtiva.js" defer></script>
-<script src="js/scrollRevelar.js" defer></script>
-<script src="js/progressoScroll.js" defer></script>
-<script src="js/copiarEmail.js" defer></script>
-<script src="js/voltarTopo.js" defer></script>
+<script src="js/abertura.js" defer></script>
 
 </body>
 </html>
