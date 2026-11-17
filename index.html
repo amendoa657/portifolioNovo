@@ -64,11 +64,12 @@
     <nav class="nav" id="nav" aria-label="Seções">
       <span class="nav-marcador" id="navMarcador" aria-hidden="true"></span>
       <a class="nav-item" href="#sobre" data-onda data-atalho="1">sobre</a>
-      <a class="nav-item" href="#evolucao" data-onda data-atalho="2">evolução</a>
-      <a class="nav-item" href="#mosaic" data-onda data-atalho="3">mosaic</a>
-      <a class="nav-item" href="#agora" data-onda data-atalho="4">agora</a>
-      <a class="nav-item" href="#projetos" data-onda data-atalho="5">projetos</a>
-      <a class="nav-item" href="#contato" data-onda data-atalho="6">contato</a>
+      <a class="nav-item" href="#competencias" data-onda data-atalho="2">sei fazer</a>
+      <a class="nav-item" href="#evolucao" data-onda data-atalho="3">evolução</a>
+      <a class="nav-item" href="#mosaic" data-onda data-atalho="4">mosaic</a>
+      <a class="nav-item" href="#agora" data-onda data-atalho="5">agora</a>
+      <a class="nav-item" href="#projetos" data-onda data-atalho="6">projetos</a>
+      <a class="nav-item" href="#contato" data-onda data-atalho="7">contato</a>
     </nav>
 
     <div class="cabecalho-acoes">
@@ -102,10 +103,10 @@
         <span class="linha linha-2"><em>Cunha</em></span>
       </h1>
 
-      <div class="heroi-letreiro revelar">
+      <p class="heroi-faco revelar" aria-live="polite">
         <span class="rotulo">faço</span>
-        <div class="letreiro" id="letreiro" aria-live="polite" aria-atomic="true"></div>
-      </div>
+        <span class="faco-moldura"><span class="faco-texto" id="facoTexto">jogos na Godot</span></span>
+      </p>
 
       <p class="heroi-resumo revelar">
         Jogos desde os 10 anos, back-end, um sistema desktop em <b>Delphi</b> em produção, <b>Rust</b> e
@@ -132,10 +133,12 @@
         <div class="dial" id="dial">
           <div class="dial-rotulos" id="dialRotulos" aria-hidden="true"></div>
           <div class="dial-botao" id="dialBotao" role="slider" tabindex="0" aria-label="Tema do site" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0" aria-valuetext="Mosaic">
+            <span class="dial-marcas" id="dialMarcas" aria-hidden="true"></span>
             <span class="dial-ponteiro" aria-hidden="true"></span>
+            <span class="dial-eixo" aria-hidden="true"></span>
           </div>
-          <p class="dial-legenda rotulo"><span>tema</span> <b data-tema-nome>mosaic</b></p>
         </div>
+        <p class="dial-legenda rotulo">tema <b data-tema-nome>mosaic</b><span>gire, arraste ou aperte W</span></p>
       </div>
     </div>
 
@@ -178,7 +181,7 @@
           <div><dt>editor</dt><dd>Neovim</dd></div>
           <div><dt>engine</dt><dd>Godot</dd></div>
           <div><dt>agora</dt><dd>Rust · Go · Delphi</dd></div>
-          <div><dt>não</dt><dd>Laravel <span class="riscado">nunca mais</span></dd></div>
+          <div><dt>não</dt><dd>Windows <span class="riscado">nunca mais</span></dd></div>
         </dl>
 
         <div class="contadores">
@@ -191,11 +194,124 @@
     </div>
   </section>
 
+  <!-- ============ O QUE EU SEI FAZER ============ -->
+  <section class="secao" id="competencias" aria-labelledby="tituloCompetencias">
+    <div class="contentor">
+      <header class="secao-cabecalho">
+        <p class="secao-rotulo rotulo revelar"><span class="secao-indice">(02)</span> sei fazer <span class="estrela">✦</span> <span class="secao-comando">italo --help</span></p>
+        <h2 class="secao-titulo" id="tituloCompetencias" data-pixel-texto>O que eu <em>sei fazer</em></h2>
+        <p class="secao-intro revelar">Tudo num lugar só: cada área, o que eu entrego nela, as ferramentas — e os projetos que provam.</p>
+      </header>
+
+      <div class="niveis revelar" role="group" aria-label="Destacar por nível">
+        <button type="button" class="nivel" data-nivel="todos" aria-pressed="true">tudo</button>
+        <button type="button" class="nivel" data-nivel="dia" aria-pressed="false"><i class="amostra amostra--dia"></i>uso todo dia</button>
+        <button type="button" class="nivel" data-nivel="projeto" aria-pressed="false"><i class="amostra amostra--projeto"></i>já entreguei projeto</button>
+        <button type="button" class="nivel" data-nivel="aprendendo" aria-pressed="false"><i class="amostra amostra--aprendendo"></i>aprendendo agora</button>
+      </div>
+
+      <ol class="competencias" id="competenciasLista">
+        <li class="competencia mo-tom-0 revelar">
+          <span class="competencia-num">01</span>
+          <div class="competencia-cabeca">
+            <h3>Back-end &amp; APIs</h3>
+            <p>APIs REST organizadas em camadas — controller, service, repository, model —, autenticação por token, validação e integração com banco.</p>
+          </div>
+          <ul class="ferramentas">
+            <li data-nivel="dia">Python</li><li data-nivel="dia">Flask</li><li data-nivel="projeto">SQLAlchemy</li>
+            <li data-nivel="projeto">Java</li><li data-nivel="projeto">Spring Boot</li><li data-nivel="projeto">JPA</li>
+            <li data-nivel="projeto">Laravel</li><li data-nivel="projeto">PHP</li><li data-nivel="aprendendo">Go</li>
+          </ul>
+          <p class="provas"><span>provas</span><a href="#projetos" data-busca-projeto="indiesquad">IndieSquad</a><a href="#projetos" data-busca-projeto="api atendimento">API Atendimento</a><a href="#projetos" data-busca-projeto="sqlalchemy">CRUD SQLAlchemy</a><a href="#projetos" data-busca-projeto="laravel">API em Laravel</a></p>
+        </li>
+
+        <li class="competencia mo-tom-1 revelar">
+          <span class="competencia-num">02</span>
+          <div class="competencia-cabeca">
+            <h3>Banco de dados</h3>
+            <p>Modelagem de domínio, migrations versionadas, consultas no repository e busca full-text local.</p>
+          </div>
+          <ul class="ferramentas">
+            <li data-nivel="dia">SQL</li><li data-nivel="dia">MySQL</li><li data-nivel="projeto">SQLite</li>
+            <li data-nivel="projeto">FTS5</li><li data-nivel="projeto">migrations</li><li data-nivel="projeto">ORM</li>
+          </ul>
+          <p class="provas"><span>provas</span><a href="#projetos" data-busca-projeto="hw atendimento">HW Atendimento</a><a href="#store" data-onda>Mosaic Store</a><a href="#projetos" data-busca-projeto="indiesquad">IndieSquad</a></p>
+        </li>
+
+        <li class="competencia mo-tom-2 revelar">
+          <span class="competencia-num">03</span>
+          <div class="competencia-cabeca">
+            <h3>Desktop &amp; sistemas</h3>
+            <p>Sistemas desktop com usuário, permissão e log; apps de janela com web por dentro; ferramentas que conversam com o sistema operacional.</p>
+          </div>
+          <ul class="ferramentas">
+            <li data-nivel="dia">Delphi</li><li data-nivel="dia">Object Pascal</li><li data-nivel="projeto">VCL</li><li data-nivel="projeto">FireDAC</li>
+            <li data-nivel="dia">C++</li><li data-nivel="projeto">pywebview</li><li data-nivel="projeto">Electron</li><li data-nivel="aprendendo">Rust</li>
+          </ul>
+          <p class="provas"><span>provas</span><a href="#projetos" data-busca-projeto="hw atendimento">HW Atendimento</a><a href="#store" data-onda>Mosaic Store</a><a href="#projetos" data-busca-projeto="tuxassist">TuxAssist</a></p>
+        </li>
+
+        <li class="competencia mo-tom-3 revelar">
+          <span class="competencia-num">04</span>
+          <div class="competencia-cabeca">
+            <h3>Front-end &amp; interface</h3>
+            <p>Interfaces sem framework, um design system inteiro, animação com propósito e direção de arte — do esboço ao código.</p>
+          </div>
+          <ul class="ferramentas">
+            <li data-nivel="dia">HTML</li><li data-nivel="dia">CSS</li><li data-nivel="dia">JavaScript</li>
+            <li data-nivel="projeto">Canvas</li><li data-nivel="projeto">Web Workers</li><li data-nivel="projeto">QML</li>
+            <li data-nivel="projeto">design system</li><li data-nivel="projeto">motion</li><li data-nivel="dia">direção de arte</li>
+          </ul>
+          <p class="provas"><span>provas</span><a href="#ui" data-onda>Mosaic UI</a><a href="#os" data-onda>Mosaic OS</a><a href="#inicio" data-onda>este portfólio</a></p>
+        </li>
+
+        <li class="competencia mo-tom-0 revelar">
+          <span class="competencia-num">05</span>
+          <div class="competencia-cabeca">
+            <h3>Jogos</h3>
+            <p>Jogos 2D na Godot, gráficos na mão em Pygame e a matemática por trás — onde tudo começou.</p>
+          </div>
+          <ul class="ferramentas">
+            <li data-nivel="dia">Godot</li><li data-nivel="dia">GDScript</li><li data-nivel="projeto">Pygame</li>
+            <li data-nivel="projeto">GameMaker</li><li data-nivel="projeto">pixel art</li><li data-nivel="projeto">raycasting</li>
+          </ul>
+          <p class="provas"><span>provas</span><a href="#projetos" data-busca-projeto="ze gotinha">Zé Gotinha</a><a href="#projetos" data-busca-projeto="raycasting">Raycasting</a><a href="#projetos" data-busca-projeto="nerds">Nerds Adventure</a></p>
+        </li>
+
+        <li class="competencia mo-tom-1 revelar">
+          <span class="competencia-num">06</span>
+          <div class="competencia-cabeca">
+            <h3>Algoritmos</h3>
+            <p>Programação competitiva: pensar em custo antes de sintaxe, estruturas de dados e matemática aplicada.</p>
+          </div>
+          <ul class="ferramentas">
+            <li data-nivel="dia">C++</li><li data-nivel="dia">STL</li><li data-nivel="dia">estruturas de dados</li>
+            <li data-nivel="projeto">complexidade</li><li data-nivel="projeto">álgebra linear</li><li data-nivel="projeto">Java</li>
+          </ul>
+          <p class="provas"><span>provas</span><a href="#projetos" data-busca-projeto="criptografia">Criptografia por Matrizes</a><a href="#evolucao" data-onda>FTC (robótica)</a></p>
+        </li>
+
+        <li class="competencia mo-tom-2 revelar">
+          <span class="competencia-num">07</span>
+          <div class="competencia-cabeca">
+            <h3>Linux &amp; ferramentas</h3>
+            <p>Linux como ambiente de trabalho desde 2021: shell, empacotamento para o Arch, rice própria e versionamento que conta história.</p>
+          </div>
+          <ul class="ferramentas">
+            <li data-nivel="dia">Linux</li><li data-nivel="dia">Arch / CachyOS</li><li data-nivel="dia">Git</li><li data-nivel="dia">Neovim</li>
+            <li data-nivel="dia">fish · bash</li><li data-nivel="projeto">Hyprland</li><li data-nivel="projeto">PKGBUILD</li><li data-nivel="projeto">Matugen</li>
+          </ul>
+          <p class="provas"><span>provas</span><a href="#os" data-onda>Mosaic OS</a><a href="#store" data-onda>Mosaic Store (PKGBUILD)</a></p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
   <!-- ============ EVOLUÇÃO (mantida) ============ -->
   <section class="secao evolucao" id="evolucao" aria-labelledby="tituloEvolucao">
     <div class="contentor">
       <header class="secao-cabecalho">
-        <p class="secao-rotulo rotulo revelar"><span class="secao-indice">(02)</span> evolução <span class="estrela">✦</span> <span class="secao-comando">git log --reverse</span></p>
+        <p class="secao-rotulo rotulo revelar"><span class="secao-indice">(03)</span> evolução <span class="estrela">✦</span> <span class="secao-comando">git log --reverse</span></p>
         <h2 class="secao-titulo" id="tituloEvolucao" data-pixel-texto>A <em>evolução</em></h2>
         <p class="secao-intro revelar">De um jogo no GameMaker a um ecossistema inteiro. Role a página: cada commit é um ano.</p>
       </header>
@@ -236,7 +352,7 @@
   <section class="secao mosaic" id="mosaic" aria-labelledby="tituloMosaic">
     <div class="contentor">
       <header class="secao-cabecalho">
-        <p class="secao-rotulo rotulo revelar"><span class="secao-indice">(03)</span> mosaic <span class="estrela">✦</span> <span class="secao-comando">paru -S mosaic</span></p>
+        <p class="secao-rotulo rotulo revelar"><span class="secao-indice">(04)</span> mosaic <span class="estrela">✦</span> <span class="secao-comando">paru -S mosaic</span></p>
         <div class="mosaic-abertura">
           <h2 class="mosaic-titulo" id="tituloMosaic" data-pixel-texto>Mosaic</h2>
           <div class="mosaic-lado revelar">
@@ -266,38 +382,44 @@
           <div class="vitrine-trilho" id="vitrineTrilho" role="group" aria-label="Escolher parte do Mosaic OS"></div>
 
           <div class="vitrine-passos" id="vitrinePassos">
-            <article class="passo mo-tom-0" data-midia="midia/os/mosaic-island.webp" data-legenda="a ilha no tema Mosaic">
-              <p class="passo-etiqueta"><span>01 / 06</span> a ilha</p>
+            <article class="passo mo-tom-0" data-midia="midia/os/mosaic-island.webp" data-legenda="a ilha aberta, no tema Mosaic">
+              <p class="passo-etiqueta"><span>01 / 07</span> a ilha</p>
               <h4>Uma ilha que vira o que você precisa</h4>
-              <p>Uma pílula no topo da tela que se transforma com física de mola: painel rápido, bússola das áreas de trabalho (segure <kbd>Super</kbd>), volume, música, prints, bateria do celular.</p>
-              <ul class="passo-chips"><li>QML</li><li>molas</li><li>KDE Connect</li></ul>
+              <p>Uma pílula no topo da tela que se transforma com física de mola: painel rápido com clima, música e atalhos, bússola das áreas de trabalho (segure <kbd>Super</kbd>), volume, prints — e cada commit e push aparecendo nela, por um hook global do git.</p>
+              <ul class="passo-chips"><li>QML</li><li>molas</li><li>git hooks</li></ul>
             </article>
-            <article class="passo mo-tom-1" data-midia="midia/os/island-dev.webp" data-legenda="commit, push e Claude Code aparecendo na ilha">
-              <p class="passo-etiqueta"><span>02 / 06</span> a ilha segue o trabalho</p>
-              <h4>Commits aparecem na ilha</h4>
-              <p>Um hook global do git avisa cada commit e cada push. Notificações saem da ilha como uma bolha líquida e derretem de volta — shaders SDF.</p>
-              <ul class="passo-chips"><li>git hooks</li><li>SDF</li><li>shaders</li></ul>
+            <article class="passo mo-tom-1" data-midia="midia/os/horizonte-start.webp" data-legenda="o menu iniciar fundido à ilha, no tema Horizonte">
+              <p class="passo-etiqueta"><span>02 / 07</span> menu iniciar</p>
+              <h4>Um lançador que sai da ilha</h4>
+              <p>Menu iniciar e notas rápidas num cartão fundido à ilha. Modos no próprio campo de busca: <code>#</code> área de transferência, <code>&gt;</code> ações, <code>@</code> janelas abertas, timers e contas.</p>
+              <ul class="passo-chips"><li>launcher</li><li>Quickshell</li></ul>
             </article>
-            <article class="passo mo-tom-2" data-midia="midia/os/themes-tour.webp" data-legenda="tour pelos temas: os widgets se redesenham">
-              <p class="passo-etiqueta"><span>03 / 06</span> temas</p>
+            <article class="passo mo-tom-2" data-midia="midia/os/desk-mosaic.webp,midia/os/desk-gruvbox.webp,midia/os/desk-horizonte.webp,midia/os/desk-macos.webp" data-legenda="mosaic · gruvbox · horizonte · macOS">
+              <p class="passo-etiqueta"><span>03 / 07</span> temas</p>
               <h4>Tema muda cor e forma</h4>
-              <p>Mosaic, Gruvbox, macOS e Horizonte. Cada tema pinta o shell, as bordas do Hyprland, o kitty, o Neovim, a Mosaic Store e o navegador — e redesenha os widgets do seu jeito.</p>
+              <p>Mosaic, Gruvbox, Horizonte e macOS. Cada tema pinta o shell, as bordas do Hyprland, o kitty, o Neovim, a Mosaic Store e o navegador — e redesenha os widgets do desktop do seu jeito.</p>
               <ul class="passo-chips"><li>Matugen</li><li>Hyprland</li><li>4 temas</li></ul>
             </article>
-            <article class="passo mo-tom-3" data-midia="midia/os/wallpaper-wave.webp" data-legenda="o wallpaper novo chega na onda de pixels da mosaic-ui">
-              <p class="passo-etiqueta"><span>04 / 06</span> wallpaper</p>
+            <article class="passo mo-tom-3" data-midia="midia/os/wallpaper-wave.mp4" data-poster="midia/os/wallpaper-wave.webp" data-legenda="o wallpaper novo chegando na onda de pixels">
+              <p class="passo-etiqueta"><span>04 / 07</span> wallpaper</p>
               <h4>O wallpaper chega numa onda de pixels</h4>
-              <p>No tema Mosaic, o wallpaper novo entra na mesma onda da mosaic-ui, e os widgets do desktop pegam carona nela em vez de sumir.</p>
-              <ul class="passo-chips"><li>mosaic-ui</li><li>carrossel</li></ul>
+              <p>No tema Mosaic, o wallpaper novo entra na mesma onda da mosaic-ui — e os widgets do desktop pegam carona nela em vez de sumir. As cores do sistema inteiro saem dele.</p>
+              <ul class="passo-chips"><li>mosaic-ui</li><li>Matugen</li></ul>
             </article>
-            <article class="passo mo-tom-0" data-midia="midia/os/desk-arrange.webp" data-legenda="arrumando os widgets na grade">
-              <p class="passo-etiqueta"><span>05 / 06</span> widgets</p>
-              <h4>Um desktop arrumado na grade</h4>
-              <p>Relógio, clima, música, letras, GitHub, notas, fotos. Botão direito no desktop e eles se arrumam numa grade; cada um tem as suas configurações.</p>
-              <ul class="passo-chips"><li>impasto</li><li>arrastar e soltar</li></ul>
+            <article class="passo mo-tom-0" data-midia="midia/os/mosaic-sidebar-right.webp" data-legenda="a lateral direita, com toggles, celular e calendário">
+              <p class="passo-etiqueta"><span>05 / 07</span> laterais</p>
+              <h4>Laterais que fazem de tudo</h4>
+              <p>À direita: toggles, sliders, bateria do celular pelo KDE Connect, calendário e notificações. À esquerda: tradutor, tarefas e um chat de IA.</p>
+              <ul class="passo-chips"><li>KDE Connect</li><li>notificações</li></ul>
             </article>
-            <article class="passo mo-tom-1" data-midia="midia/os/demo-gruvbox.mp4" data-poster="midia/os/demo-gruvbox.webp" data-legenda="o Mosaic OS em movimento, no tema Gruvbox">
-              <p class="passo-etiqueta"><span>06 / 06</span> em movimento</p>
+            <article class="passo mo-tom-1" data-midia="midia/os/lock-mosaic.webp,midia/os/lock-macos.webp" data-legenda="tela de bloqueio: Mosaic e macOS">
+              <p class="passo-etiqueta"><span>06 / 07</span> bloqueio</p>
+              <h4>Bloqueia com a cara do tema</h4>
+              <p>No macOS, a data sobre um relógio enorme e a senha numa pílula que treme quando erra. Nos outros, um relógio em duas linhas, o que está tocando e a letra.</p>
+              <ul class="passo-chips"><li>lock screen</li><li>impasto</li></ul>
+            </article>
+            <article class="passo mo-tom-2" data-midia="midia/os/demo-gruvbox.mp4" data-poster="midia/os/demo-gruvbox.webp" data-legenda="o Mosaic OS em movimento, no tema Gruvbox">
+              <p class="passo-etiqueta"><span>07 / 07</span> em movimento</p>
               <h4>Leve com a GPU</h4>
               <p>Nada anima sozinho quando você não está olhando. Tem até um painel (<kbd>Super</kbd> <kbd>Alt</kbd> <kbd>G</kbd>) que desliga partes do shell pra achar o que pesa na placa de vídeo.</p>
               <ul class="passo-chips"><li>desempenho</li><li>tela cheia</li></ul>
@@ -305,11 +427,8 @@
           </div>
 
           <div class="vitrine-palco" id="vitrinePalco">
-            <div class="palco-mesa" id="palcoMesa">
-              <img id="palcoImagem" src="midia/os/mosaic-island.webp" alt="" decoding="async">
-              <video id="palcoVideo" muted loop playsinline preload="none" hidden></video>
-            </div>
-            <p class="palco-legenda"><span id="palcoContador">01</span><span id="palcoLegenda">a ilha no tema Mosaic</span></p>
+            <div class="palco-mesa" id="palcoMesa"></div>
+            <p class="palco-legenda"><span id="palcoContador">01</span><span id="palcoLegenda">a ilha aberta, no tema Mosaic</span></p>
           </div>
         </div>
       </div>
@@ -429,7 +548,7 @@
   <section class="secao" id="agora" aria-labelledby="tituloAgora">
     <div class="contentor">
       <header class="secao-cabecalho">
-        <p class="secao-rotulo rotulo revelar"><span class="secao-indice">(04)</span> agora <span class="estrela">✦</span> <span class="secao-comando">paru -S italo-2026</span></p>
+        <p class="secao-rotulo rotulo revelar"><span class="secao-indice">(05)</span> agora <span class="estrela">✦</span> <span class="secao-comando">paru -S italo-2026</span></p>
         <h2 class="secao-titulo" id="tituloAgora" data-pixel-texto>Agora <em>compilando</em></h2>
         <p class="secao-intro revelar">Como a fila da Mosaic Store: o que já está instalado, o que está compilando e o que está na fila. É o que estou entregando e aprendendo agora.</p>
       </header>
@@ -475,7 +594,7 @@
   <section class="secao" id="projetos" aria-labelledby="tituloProjetos">
     <div class="contentor">
       <header class="secao-cabecalho">
-        <p class="secao-rotulo rotulo revelar"><span class="secao-indice">(05)</span> projetos <span class="estrela">✦</span> <span class="secao-comando">ls ~/projetos</span></p>
+        <p class="secao-rotulo rotulo revelar"><span class="secao-indice">(06)</span> projetos <span class="estrela">✦</span> <span class="secao-comando">ls ~/projetos</span></p>
         <h2 class="secao-titulo" id="tituloProjetos" data-pixel-texto>O <em>índice</em></h2>
       </header>
 
@@ -493,7 +612,7 @@
           <button type="button" class="mo-chip" data-filtro="desktop" aria-pressed="false">desktop</button>
           <button type="button" class="mo-chip" data-filtro="algoritmos" aria-pressed="false">algoritmos</button>
         </div>
-        <p class="indice-contagem rotulo" id="indiceContagem" aria-live="polite">10 resultados</p>
+        <p class="indice-contagem rotulo" id="indiceContagem" aria-live="polite">11 resultados</p>
       </div>
 
       <ol class="indice" id="indice">
@@ -578,9 +697,18 @@
             <span class="indice-seta" aria-hidden="true">↗</span>
           </a>
         </li>
+        <li class="indice-linha mo-tom-1" data-area="back" data-busca="laravel api rest php eloquent migrations blade" data-previa="ladrilho" data-letra="PHP">
+          <a href="https://github.com/amendoa657/laravelApiRest" target="_blank" rel="noopener">
+            <span class="indice-num">10</span>
+            <span class="indice-nome">API REST em Laravel<small>rotas, controllers, migrations e Eloquent — o caminho completo dentro do framework</small></span>
+            <span class="indice-pilha">Laravel · PHP · MySQL</span>
+            <span class="indice-ano">2026</span>
+            <span class="indice-seta" aria-hidden="true">↗</span>
+          </a>
+        </li>
         <li class="indice-linha mo-tom-0" data-area="desktop" data-busca="ftcsim electron robotica ftc amigos droids simulador" data-previa="ladrilho" data-letra="FTC">
           <a href="https://github.com/amendoa657/FtcSimElectron" target="_blank" rel="noopener">
-            <span class="indice-num">10</span>
+            <span class="indice-num">11</span>
             <span class="indice-nome">FtcSim Electron<small>o simulador da FTC virando app de desktop — com uma boa ajuda de IA</small></span>
             <span class="indice-pilha">Electron · JS</span>
             <span class="indice-ano">2025</span>
@@ -597,69 +725,6 @@
       <div class="previa" id="previa" aria-hidden="true"><div class="previa-quadro" id="previaQuadro"></div></div>
 
       <p class="projetos-nota revelar">Tem mais coisa entre experimentos e trabalhos de escola — <a class="link-sublinhado" href="https://github.com/amendoa657?tab=repositories" target="_blank" rel="noopener">o resto está no GitHub ↗</a></p>
-    </div>
-  </section>
-
-  <!-- ============ STACK ============ -->
-  <section class="secao" id="stack" aria-labelledby="tituloStack">
-    <div class="contentor">
-      <header class="secao-cabecalho">
-        <p class="secao-rotulo rotulo revelar"><span class="secao-indice">(06)</span> stack <span class="estrela">✦</span> <span class="secao-comando">tree ~/stack</span></p>
-        <h2 class="secao-titulo" id="tituloStack" data-pixel-texto>O <em>teclado</em></h2>
-        <p class="secao-intro revelar">Aperte uma tecla para ver onde ela aparece de verdade. As coloridas eu uso todo dia; as tracejadas estou aprendendo.</p>
-      </header>
-
-      <div class="teclado-cartao revelar">
-        <div class="teclado" id="teclado">
-          <div class="teclado-grupo mo-tom-0">
-            <span class="rotulo"><i></i>~/back-end</span>
-            <div class="teclado-linha">
-              <button type="button" class="mo-tecla principal" data-onde="Mosaic Store, TuxAssist, IndieSquad|a linguagem que eu mais escrevo fora da Godot">Python</button>
-              <button type="button" class="mo-tecla principal" data-onde="Mosaic Store, IndieSquad, CRUD SQLAlchemy|back-end é onde me sinto em casa">Flask</button>
-              <button type="button" class="mo-tecla principal" data-onde="Mosaic Store (FTS5), HW Atendimento e IndieSquad (MySQL)|busca local, migrations e consultas no repository">SQL</button>
-              <button type="button" class="mo-tecla aprendendo" data-onde="o próximo back-end|APIs simples, rápidas e compiladas — começando agora">Go</button>
-              <button type="button" class="mo-tecla" data-onde="API Atendimento, FTC|Spring Boot, JPA e a POO da robótica">Java</button>
-            </div>
-          </div>
-          <div class="teclado-grupo mo-tom-1">
-            <span class="rotulo"><i></i>~/sistemas</span>
-            <div class="teclado-linha">
-              <button type="button" class="mo-tecla principal" data-onde="HW Atendimento|VCL, FireDAC, perfis e permissões — sistema de verdade, com usuário de verdade">Delphi</button>
-              <button type="button" class="mo-tecla principal" data-onde="HW Atendimento|Object Pascal: verboso, explícito e honesto">Pascal</button>
-              <button type="button" class="mo-tecla aprendendo" data-onde="estudos|ownership e borrow checker — a linguagem que eu mais quero dominar">Rust</button>
-              <button type="button" class="mo-tecla principal" data-onde="competitiva, Criptografia por Matrizes|quando o limite é um segundo, você pensa em custo">C++</button>
-              <button type="button" class="mo-tecla" data-onde="competitiva|vector, map, set, priority_queue">STL</button>
-            </div>
-          </div>
-          <div class="teclado-grupo mo-tom-2">
-            <span class="rotulo"><i></i>~/interface</span>
-            <div class="teclado-linha">
-              <button type="button" class="mo-tecla principal" data-onde="Mosaic OS|Quickshell: a ilha, o dock e os temas">QML</button>
-              <button type="button" class="mo-tecla principal" data-onde="Mosaic UI, Mosaic Store, este portfólio|sem framework: @layer, color-mix(), canvas">CSS</button>
-              <button type="button" class="mo-tecla" data-onde="Mosaic UI, este portfólio|vanilla, Web Workers e canvas">JavaScript</button>
-              <button type="button" class="mo-tecla" data-onde="Mosaic Store, Mosaic OS|as cores que vêm do wallpaper">Matugen</button>
-            </div>
-          </div>
-          <div class="teclado-grupo mo-tom-3">
-            <span class="rotulo"><i></i>~/jogos · ~/sistema</span>
-            <div class="teclado-linha">
-              <button type="button" class="mo-tecla principal" data-onde="Zé Gotinha, Nerds Adventure|onde tudo começou">Godot</button>
-              <button type="button" class="mo-tecla" data-onde="Raycasting Game|pra entender o que uma engine faz por mim">Pygame</button>
-              <button type="button" class="mo-tecla principal" data-onde="CachyOS, desde 2021|ambiente de trabalho, não hobby">Linux</button>
-              <button type="button" class="mo-tecla" data-onde="Mosaic OS|a rice que virou projeto">Hyprland</button>
-              <button type="button" class="mo-tecla principal" data-onde="tudo|commits que contam uma história">Git</button>
-              <button type="button" class="mo-tecla" data-onde="o editor|o dia inteiro aqui dentro">Neovim</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="teclado-tela">
-          <p class="rotulo">saída</p>
-          <div class="saida" id="tecladoSaida" aria-live="polite">
-            <div class="linha"><span class="seta">›</span> aperte uma tecla<span class="mo-caret"></span></div>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -696,7 +761,7 @@
   <div class="contentor rodape-interno">
     <span><i class="mo-marca mo-marca--viva"></i> © <span id="ano">2026</span> Italo Cunha</span>
     <span>feito à mão com a Mosaic UI <span class="estrela">✦</span> sem framework</span>
-    <span class="rodape-atalhos"><kbd class="mo-atalho">1</kbd>–<kbd class="mo-atalho">6</kbd> seções · <kbd class="mo-atalho">/</kbd> busca · <kbd class="mo-atalho">W</kbd> tema · <kbd class="mo-atalho">T</kbd> terminal</span>
+    <span class="rodape-atalhos"><kbd class="mo-atalho">1</kbd>–<kbd class="mo-atalho">7</kbd> seções · <kbd class="mo-atalho">/</kbd> busca · <kbd class="mo-atalho">W</kbd> tema · <kbd class="mo-atalho">T</kbd> terminal</span>
   </div>
 </footer>
 

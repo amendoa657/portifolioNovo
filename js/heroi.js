@@ -8,65 +8,20 @@
   const reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------------------------------------------------------------------
-     Letreiro: um painel de palhetas (split-flap) que troca o que eu faço
+     O que eu faço: a frase se desfaz em pixels e os mesmos quadradinhos
+     voam até formar a próxima
      --------------------------------------------------------------------- */
-  const letreiro = document.getElementById('letreiro');
-  const FRASES = ['JOGOS NA GODOT', 'BACK-END', 'DESKTOP EM DELPHI', 'RUST, APRENDENDO', 'GO, O PRÓXIMO', 'INTERFACES', 'C++ COMPETITIVO', 'DIREÇÃO DE ARTE'];
-  const CASAS = Math.max(...FRASES.map((f) => f.length));
-  const SORTEIO = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#+-';
-  const celulas = [];
-  for (let i = 0; i < CASAS; i += 1) {
-    const c = document.createElement('span');
-    c.className = 'vazio';
-    c.setAttribute('aria-hidden', 'true');
-    c.textContent = '·';
-    letreiro.appendChild(c);
-    celulas.push(c);
-  }
-  const leitor = document.createElement('span');
-  leitor.className = 'acessivel-oculto';
-  letreiro.appendChild(leitor);
-
-  let iFrase = -1;
-  let rodada = 0;
-  function mostrar(frase) {
-    const minha = ++rodada;
-    leitor.textContent = frase.toLowerCase();
-    celulas.forEach((c, i) => {
-      const alvo = frase[i] || ' ';
-      const atual = c.classList.contains('vazio') ? ' ' : c.textContent;
-      if (alvo === atual) return;
-      const assentar = () => {
-        if (minha !== rodada) return;
-        c.classList.toggle('vazio', alvo === ' ');
-        c.textContent = alvo === ' ' ? '·' : alvo;
-      };
-      if (reduzido) { assentar(); return; }
-      let voltas = 2 + Math.floor(Math.random() * 4);
-      setTimeout(function virar() {
-        if (minha !== rodada) return;
-        c.classList.remove('virando');
-        void c.offsetWidth;
-        c.classList.add('virando');
-        if (voltas-- > 0) {
-          c.classList.remove('vazio');
-          c.textContent = SORTEIO[Math.floor(Math.random() * SORTEIO.length)];
-          setTimeout(virar, 60);
-        } else {
-          assentar();
-        }
-      }, i * 32);
-    });
-  }
-  function proximaFrase() {
-    iFrase = (iFrase + 1) % FRASES.length;
-    mostrar(FRASES[iFrase]);
-  }
+  const faco = document.getElementById('facoTexto');
+  const FRASES = ['jogos na Godot', 'back-end', 'desktop em Delphi', 'Rust, aprendendo', 'Go, o próximo', 'interfaces', 'C++ competitivo', 'direção de arte'];
+  let iFrase = 0;
   window.iniciarLetreiro = () => {
-    if (window._letreiroIniciado) return;
+    if (window._letreiroIniciado || reduzido) return;
     window._letreiroIniciado = true;
-    proximaFrase();
-    if (!reduzido) setInterval(() => { if (!document.hidden && naTela(letreiro)) proximaFrase(); }, 3200);
+    setInterval(() => {
+      if (document.hidden || !naTela(faco)) return;
+      iFrase = (iFrase + 1) % FRASES.length;
+      PixelTexto.trocar(faco, FRASES[iFrase]);
+    }, 3000);
   };
 
   /* ---------------------------------------------------------------------
@@ -141,14 +96,23 @@
   const rotulos = document.getElementById('dialRotulos');
   const TEMAS = Tema.TEMAS;
   const ANGULOS = [-90, -45, 0, 45, 90];
-  const CENTRO = { x: 115, y: 104 };
-  const RAIO = 92;
+  const CORES = { mosaic: '#86d7ac', gruvbox: '#fe8019', horizonte: '#ffd27a', papel: '#e5432d', fosforo: '#39ff88' };
+  const CENTRO = { x: botao.offsetLeft + botao.offsetWidth / 2, y: botao.offsetTop + botao.offsetHeight / 2 };
+  const RAIO = botao.offsetWidth / 2 + 30;
+  /* As marcas de cada posição, na cor do tema que ela escolhe. */
+  const marcas = document.getElementById('dialMarcas');
+  TEMAS.forEach((t, i) => {
+    const m = document.createElement('i');
+    m.style.setProperty('--a', ANGULOS[i] + 'deg');
+    m.style.setProperty('--c', CORES[t]);
+    marcas.appendChild(m);
+  });
 
   const botoesRotulo = TEMAS.map((t, i) => {
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'dial-rotulo';
-    b.innerHTML = `<i></i>${Tema.NOMES[t]}`;
+    b.innerHTML = `<i style="background:${CORES[t]}"></i>${Tema.NOMES[t]}`;
     const a = (ANGULOS[i] * Math.PI) / 180;
     b.style.left = (CENTRO.x + Math.sin(a) * RAIO) + 'px';
     b.style.top = (CENTRO.y - Math.cos(a) * RAIO) + 'px';

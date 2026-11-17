@@ -34,7 +34,7 @@
   const grade = (pares) => `<div class="grade">${pares.map(([a, b]) => `<span class="chave">${a}</span><span>${b}</span>`).join('')}</div>`;
   const link = (repo) => `<a href="https://github.com/amendoa657/${repo}" target="_blank" rel="noopener">github.com/amendoa657/${repo}</a>`;
 
-  const SECOES = ['inicio', 'sobre', 'evolucao', 'mosaic', 'os', 'store', 'ui', 'agora', 'projetos', 'stack', 'contato'];
+  const SECOES = ['inicio', 'sobre', 'competencias', 'evolucao', 'mosaic', 'os', 'store', 'ui', 'agora', 'projetos', 'contato'];
 
   function irParaSecao(id) {
     fechar();
@@ -74,18 +74,18 @@
         ['Mosaic Store', link('mosaicStore')], ['Mosaic OS', link('mosaicOS')], ['IndieSquad', link('indieSquad')],
         ['HW Atendimento', link('hwAtendimentoDelphi')], ['API Atendimento', link('ApiAtendimento')],
         ['TuxAssist', link('tuxAssist')], ['Zé Gotinha', link('ZeGotinhaGame')], ['Raycasting', link('RaycastingGame')],
-        ['Criptografia', link('Criptografia')],
+        ['Criptografia', link('Criptografia')], ['Laravel API', link('laravelApiRest')],
       ]),
     },
     stack: {
       d: 'o que eu uso no dia a dia',
       x: () => grade([
-        ['back-end', 'Python, Flask, SQL, Java/Spring — e Go chegando'],
+        ['back-end', 'Python, Flask, SQL, Java/Spring, Laravel/PHP — e Go chegando'],
         ['sistemas', 'Delphi, Object Pascal, C++, Rust (aprendendo)'],
         ['interface', 'QML, CSS, JavaScript, Matugen'],
         ['jogos', 'Godot, GDScript, Pygame'],
         ['sistema', 'Linux, Hyprland, Git, Neovim'],
-        ['não', 'Laravel. nunca mais.'],
+        ['não', 'Windows. nunca mais.'],
       ]),
     },
     trajetoria: {
@@ -113,7 +113,7 @@
     },
     cargo: { d: '', x: () => '<span class="ok">Compiling</span> italo v2026.0.0<br>warning: ainda aprendendo lifetimes. volte em breve.' },
     go: { d: '', x: () => 'go: na fila. o primeiro serviço sai em breve.' },
-    laravel: { d: '', x: () => '<span class="erro">laravel: comando removido deste sistema por decisão do dono.</span>' },
+    windows: { d: '', x: () => '<span class="erro">windows: comando não encontrado.</span> e nem vai ser. desde 2021 aqui é Linux.' },
     contato: {
       d: 'como falar comigo',
       x: () => grade([

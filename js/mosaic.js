@@ -15,18 +15,58 @@
 
   /* ---------------------------------------------------------------------
      01 · Mosaic OS
+     Cada passo tem a sua camada no palco, criada uma vez e carregada antes
+     de aparecer — trocar de passo nunca troca src (era isso que travava).
+     Passos com várias imagens viram uma galeria que alterna sozinha.
      --------------------------------------------------------------------- */
   const passos = Array.from(document.querySelectorAll('#vitrinePassos .passo'));
   const trilho = document.getElementById('vitrineTrilho');
   const mesa = document.getElementById('palcoMesa');
-  const imagem = document.getElementById('palcoImagem');
-  const video = document.getElementById('palcoVideo');
   const legenda = document.getElementById('palcoLegenda');
   const contador = document.getElementById('palcoContador');
-  let atual = 0;
+  let atual = -1;
+  let galeria = 0;
 
-  /* Pré-carrega o que é leve; o vídeo só quando chegar a vez dele. */
-  passos.forEach((p) => { if (!p.dataset.midia.endsWith('.mp4')) { const i = new Image(); i.src = p.dataset.midia; } });
+  const camadas = passos.map((p, i) => {
+    const camada = document.createElement('div');
+    camada.className = 'palco-camada';
+    const midias = p.dataset.midia.split(',');
+    camada.itens = midias.map((m, k) => {
+      let el;
+      if (m.endsWith('.mp4')) {
+        el = document.createElement('video');
+        el.muted = true; el.loop = true; el.playsInline = true; el.preload = 'none';
+        el.poster = p.dataset.poster || '';
+        el.dataset.src = m;
+      } else {
+        el = document.createElement('img');
+        el.alt = k === 0 ? p.dataset.legenda : '';
+        el.decoding = 'async';
+        el.dataset.src = m;
+      }
+      el.className = 'palco-item' + (k === 0 ? ' visivel' : '');
+      camada.appendChild(el);
+      return el;
+    });
+    if (i === 0) camada.classList.add('ativa');
+    mesa.appendChild(camada);
+    return camada;
+  });
+
+  /* Carrega tudo quando a vitrine chega perto da tela. */
+  function carregarTudo() {
+    camadas.forEach((c) => c.itens.forEach((el) => {
+      if (el.dataset.carregado) return;
+      el.dataset.carregado = '1';
+      el.src = el.dataset.src;
+      if (el.tagName === 'VIDEO') el.preload = 'auto';
+    }));
+  }
+  const vitrine = document.getElementById('vitrineOS');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((e) => { if (e[0].isIntersecting) { carregarTudo(); io.disconnect(); } }, { rootMargin: '900px 0px' });
+    io.observe(vitrine);
+  } else carregarTudo();
 
   const barras = passos.map((p, i) => {
     const b = document.createElement('button');
@@ -38,46 +78,63 @@
     return b;
   });
 
+  function tocar(camada, sim) {
+    camada.itens.forEach((el) => {
+      if (el.tagName !== 'VIDEO') return;
+      if (sim && !reduzido) { if (!el.dataset.carregado) { el.dataset.carregado = '1'; el.src = el.dataset.src; } el.play().catch(() => {}); }
+      else el.pause();
+    });
+  }
+
   function mostrarPasso(i) {
-    if (i === atual && imagem.dataset.pronto) return;
-    imagem.dataset.pronto = '1';
+    if (i === atual) return;
     const anterior = atual;
     atual = i;
+    galeria = 0;
     passos.forEach((p, k) => p.classList.toggle('ativo', k === i));
     barras.forEach((b, k) => b.classList.toggle('ativo', k === i));
     const p = passos[i];
     const trocar = () => {
-      const midia = p.dataset.midia;
-      if (midia.endsWith('.mp4')) {
-        imagem.hidden = true;
-        video.hidden = false;
-        if (video.getAttribute('src') !== midia) { video.poster = p.dataset.poster || ''; video.src = midia; }
-        if (!reduzido) video.play().catch(() => {});
-      } else {
-        video.pause();
-        video.hidden = true;
-        imagem.hidden = false;
-        imagem.src = midia;
-        imagem.alt = p.dataset.legenda;
-      }
+      camadas.forEach((c, k) => {
+        c.classList.toggle('ativa', k === i);
+        if (k === i) c.itens.forEach((el, n) => el.classList.toggle('visivel', n === 0));
+        tocar(c, k === i);
+      });
       legenda.textContent = p.dataset.legenda;
       contador.textContent = String(i + 1).padStart(2, '0');
     };
-    if (anterior === i || !window.Pixels) { trocar(); return; }
+    if (anterior < 0 || !window.Pixels || reduzido) { trocar(); return; }
     /* A onda entra pela borda esquerda do palco, na altura do passo ativo. */
     const r = mesa.getBoundingClientRect();
     const pr = p.getBoundingClientRect();
     Pixels.revelarElemento(mesa, {
       clienteX: r.left + 1,
       clienteY: Math.max(r.top + 1, Math.min(r.bottom - 1, pr.top + pr.height / 2)),
-      passo: 22, corCortina: corDe('--mo-janela'), trocar,
+      passo: 24, corCortina: corDe('--mo-janela'), trocar,
     });
   }
 
-  /* O passo ativo é o que está mais perto do meio da tela. */
+  /* Galerias: o passo ativo com várias imagens alterna a cada 2,6 s. */
+  if (!reduzido) {
+    setInterval(() => {
+      if (atual < 0 || document.hidden || !naTela(mesa)) return;
+      const c = camadas[atual];
+      if (c.itens.length < 2) return;
+      galeria = (galeria + 1) % c.itens.length;
+      const r = mesa.getBoundingClientRect();
+      Pixels.revelarElemento(mesa, {
+        clienteX: r.right - 1, clienteY: r.top + r.height / 2, passo: 24, corCortina: corDe('--mo-janela'),
+        trocar: () => c.itens.forEach((el, n) => el.classList.toggle('visivel', n === galeria)),
+      });
+    }, 2600);
+  }
+
+  /* O passo ativo é o que está mais perto do ponto de leitura da tela. */
   let agendado = false;
   function escolherPeloScroll() {
     agendado = false;
+    const vr = vitrine.getBoundingClientRect();
+    if (vr.bottom < 0 || vr.top > window.innerHeight) return;
     const meio = window.innerHeight * (window.innerWidth < 960 ? 0.72 : 0.5);
     let melhor = 0;
     let menor = Infinity;
@@ -89,9 +146,8 @@
     mostrarPasso(melhor);
   }
   window.addEventListener('scroll', () => { if (!agendado) { agendado = true; requestAnimationFrame(escolherPeloScroll); } }, { passive: true });
-  passos[0].classList.add('ativo');
-  barras[0].classList.add('ativo');
-  imagem.dataset.pronto = '1';
+  window.addEventListener('resize', escolherPeloScroll);
+  mostrarPasso(0);
 
   /* ---------------------------------------------------------------------
      02 · Mosaic Store: o baralho

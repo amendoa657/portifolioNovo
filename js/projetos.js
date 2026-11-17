@@ -1,6 +1,6 @@
 /* =========================================================================
    Projetos: o índice, a busca e a prévia que segue o mouse.
-   E o teclado da stack.
+   E o filtro do "o que eu sei fazer".
    ========================================================================= */
 
 (function () {
@@ -99,36 +99,24 @@
   });
 
   /* ---------------------------------------------------------------------
-     O teclado da stack
+     O que eu sei fazer: destacar por nível e pular para as provas
      --------------------------------------------------------------------- */
-  const saida = document.getElementById('tecladoSaida');
-  let escrevendo = 0;
-  document.getElementById('teclado').addEventListener('click', (e) => {
-    const tecla = e.target.closest('.mo-tecla');
-    if (!tecla) return;
-    document.querySelectorAll('#teclado .mo-tecla[aria-pressed]').forEach((t) => t.removeAttribute('aria-pressed'));
-    tecla.setAttribute('aria-pressed', 'true');
-    const [onde, nota] = (tecla.dataset.onde || '').split('|');
-    const grupo = tecla.closest('.teclado-grupo').querySelector('.rotulo').textContent.trim();
-    const nomeTecla = tecla.textContent.trim();
-    const frequencia = tecla.classList.contains('principal') ? '<span class="mo-selo mo-selo--vivo">todo dia</span>'
-      : tecla.classList.contains('aprendendo') ? '<span class="mo-selo">aprendendo</span>' : '<span class="fraco">de vez em quando</span>';
-    const linhasSaida = [
-      `<span class="seta">$</span> grep -r "${nomeTecla.toLowerCase()}" ${grupo}`,
-      `<span class="seta">›</span> <span class="nome">${nomeTecla}</span> ${frequencia}`,
-      `<span class="seta">›</span> onde: ${onde}`,
-      `<span class="seta">›</span> <span class="fraco">${nota}</span>`,
-    ];
-    const minha = ++escrevendo;
-    saida.innerHTML = '';
-    linhasSaida.forEach((html, i) => {
-      setTimeout(() => {
-        if (minha !== escrevendo) return;
-        const d = document.createElement('div');
-        d.className = 'linha';
-        d.innerHTML = html + (i === linhasSaida.length - 1 ? '<span class="mo-caret"></span>' : '');
-        saida.appendChild(d);
-      }, reduzido ? 0 : i * 90);
-    });
+  const lista = document.getElementById('competenciasLista');
+  const niveis = Array.from(document.querySelectorAll('.nivel'));
+  niveis.forEach((b) => b.addEventListener('click', () => {
+    niveis.forEach((n) => n.setAttribute('aria-pressed', String(n === b)));
+    lista.dataset.destaque = b.dataset.nivel;
+  }));
+  /* Uma prova leva ao índice já filtrado pelo projeto. */
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('[data-busca-projeto]');
+    if (!a) return;
+    e.preventDefault();
+    filtro = 'todos';
+    filtros.forEach((f) => f.setAttribute('aria-pressed', String(f.dataset.filtro === 'todos')));
+    busca.value = a.dataset.buscaProjeto;
+    aplicar();
+    const r = a.getBoundingClientRect();
+    if (window.irPara) irPara('#projetos', e.clientX || r.left, e.clientY || r.top);
   });
 })();

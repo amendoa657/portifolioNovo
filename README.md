@@ -18,15 +18,15 @@ Nada de cartão arredondado em grade. O site é editorial — tipografia enorme,
 
 | Seção | O mostrador |
 | --- | --- |
-| **Herói** | Um **letreiro de palhetas** (split-flap) troca o que eu faço, e um **botão giratório** escolhe o tema. O nome se monta em pixels. |
+| **Herói** | O que eu faço se **desfaz em pixels e remonta** na próxima frase, e um **botão giratório** escolhe o tema. O nome se monta em pixels. |
 | **Quem sou** | Um manifesto com **peças** que caem no lugar, uma ficha técnica e **odômetros** que rolam dígito por dígito. |
-| **Evolução** | A linha do tempo presa na tela, de 2019 até hoje, avançando com a rolagem. |
+| **O que eu sei fazer** | Sete áreas — back-end, banco, desktop, front-end, jogos, algoritmos, Linux —, cada uma com o que eu entrego, as ferramentas marcadas por nível (todo dia, já entreguei projeto, aprendendo) e os projetos que provam. |
+| **Evolução** | A linha do tempo presa na tela: 13 commits, de 2019 até hoje, com os projetos importantes — alguns mostram código de verdade do repositório. |
 | **Mosaic OS** | Um **carrossel vertical**: os passos rolam, o palco fica preso à direita sangrando até a borda e troca numa onda de pixels. |
 | **Mosaic Store** | Um **baralho** com as 10 telas da loja: clique, arraste ou use as setas — a carta nova nasce numa onda. |
 | **Mosaic UI** | Os quatro pilares da identidade funcionando de verdade. |
 | **Agora** | Uma **fila de compilação** como a da loja: Delphi instalado, Rust compilando, Go na fila, Spring Boot instalado. |
 | **Projetos** | Um **índice** com busca (<kbd>/</kbd>), filtros e uma prévia que segue o mouse e se revela em pixels. |
-| **Stack** | Um teclado: cada tecla mostra onde aquela tecnologia aparece. |
 
 ## Temas: cor e forma
 
@@ -58,7 +58,7 @@ Troque pelo mostrador do herói, pelo botão do cabeçalho, pela tecla <kbd>W</k
 
 | Tecla | O que faz |
 | --- | --- |
-| <kbd>1</kbd>–<kbd>6</kbd> | vai para a seção, numa onda de pixels |
+| <kbd>1</kbd>–<kbd>7</kbd> | vai para a seção, numa onda de pixels |
 | <kbd>Enter</kbd> / <kbd>P</kbd> / <kbd>G</kbd> | Mosaic / projetos / GitHub |
 | <kbd>W</kbd> | próximo tema |
 | <kbd>/</kbd> | busca nos projetos |
@@ -82,7 +82,7 @@ Troque pelo mostrador do herói, pelo botão do cabeçalho, pela tecla <kbd>W</k
     ├── evolucao.js     # a linha do tempo
     ├── mosaic.js       # carrossel do OS, baralho da Store, pilares da UI
     ├── agora.js        # a fila de compilação
-    ├── projetos.js     # índice, busca, prévia e teclado da stack
+    ├── projetos.js     # índice, busca, prévia e o filtro do "sei fazer"
     ├── terminal.js     # o shell do painel lateral
     └── abertura.js     # a abertura
 ```
