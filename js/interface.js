@@ -116,11 +116,31 @@
     blocos.forEach((b, i) => b.classList.toggle('aceso', i < acesos));
   }
 
+  /* ---------- Próxima seção: o lembrete fixo de que ainda tem mais ---------- */
+  const proxima = $('#proxima');
+  const proximaNome = $('#proximaNome');
+  const proximaConta = $('#proximaConta');
+  const NOMES = ['sobre', 'o que eu sei fazer', 'a evolução', 'a Mosaic', 'agora compilando', 'projetos', 'contato'];
+  function atualizarProxima() {
+    const linha = window.innerHeight * 0.5;
+    let i = -1;
+    secoes.forEach((sec, k) => { if (sec && sec.getBoundingClientRect().top <= linha) i = k; });
+    const prox = i + 1;
+    const noHeroi = window.scrollY < heroi.offsetHeight * 0.6;
+    const fim = prox >= secoes.length || window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 40;
+    proxima.classList.toggle('visivel', !noHeroi && !fim && !nav.classList.contains('aberta'));
+    if (prox < secoes.length) {
+      proxima.setAttribute('href', '#' + secoes[prox].id);
+      proximaNome.textContent = NOMES[prox] || itens[prox].textContent;
+      proximaConta.textContent = String(prox + 1).padStart(2, '0') + '/' + String(secoes.length).padStart(2, '0');
+    }
+  }
+
   let agendado = false;
   function aoRolar() {
     if (agendado) return;
     agendado = true;
-    requestAnimationFrame(() => { agendado = false; atualizarAtivo(); atualizarProgresso(); atualizarCampo(); });
+    requestAnimationFrame(() => { agendado = false; atualizarAtivo(); atualizarProgresso(); atualizarCampo(); atualizarProxima(); });
   }
   window.addEventListener('scroll', aoRolar, { passive: true });
   window.addEventListener('resize', () => { moverMarcador(); aoRolar(); });

@@ -955,3 +955,47 @@ main { position: relative; z-index: 1; }
   .faixa-trilho { animation: none; }
 }
 .baralho-contador .fita-digito { transition: none; }
+
+/* ==========================================================================
+   Continuidade: a ponte depois da evolução e o "próxima seção" fixo
+   ========================================================================== */
+.continua {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 10px 24px;
+  margin-top: clamp(48px, 6vw, 80px); padding: 26px 4px 26px; border-top: var(--borda); border-bottom: 1px solid var(--mo-linha);
+  text-decoration: none; isolation: isolate;
+}
+.continua::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--mo-destaque); transform: scaleY(0); transform-origin: bottom; transition: transform 0.4s var(--mo-ease-saida); }
+.continua:hover::before, .continua:focus-visible::before { transform: scaleY(1); }
+.continua:hover, .continua:hover .rotulo, .continua:hover small, .continua:hover .estrela, .continua:hover .continua-num { color: var(--mo-sobre-destaque); text-shadow: none; }
+.continua-rotulo { grid-column: 1 / -1; }
+.continua-titulo { display: grid; gap: 6px; font-family: var(--fonte-display); font-weight: var(--display-peso); text-transform: var(--display-caixa); font-size: clamp(36px, 5.6vw, 80px); line-height: 0.95; letter-spacing: var(--display-espaco); }
+.continua-num { font-family: var(--mo-fonte-mono); font-size: 0.32em; font-weight: 500; letter-spacing: 0; color: var(--mo-destaque); vertical-align: super; margin-right: 0.3em; }
+.continua-titulo small { font-family: var(--mo-fonte); font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 16px; line-height: 1.4; color: var(--mo-texto-2); }
+.continua-seta { font-size: clamp(40px, 5vw, 72px); line-height: 1; animation: continua-desce 1.8s var(--mo-ease-meio) infinite; }
+@keyframes continua-desce { 0%, 100% { transform: none; } 50% { transform: translateY(10px); } }
+
+.proxima {
+  position: fixed; right: max(16px, calc((100vw - var(--largura)) / 2 - 8px)); bottom: 20px; z-index: 35;
+  display: flex; align-items: center; gap: 12px; padding: 8px 14px 8px 10px;
+  border: var(--borda); border-radius: var(--raio); background: color-mix(in srgb, var(--mo-fundo) 88%, transparent);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  text-decoration: none; color: var(--mo-texto);
+  opacity: 0; transform: translateY(12px); pointer-events: none;
+  transition: opacity var(--mo-dur-media) ease, transform var(--mo-dur-media) var(--mo-ease-saida), border-color var(--mo-dur-curta) ease;
+}
+.proxima.visivel { opacity: 1; transform: none; pointer-events: auto; }
+.proxima:hover { border-color: var(--mo-destaque); }
+.proxima-seta { display: grid; place-items: center; width: 28px; height: 28px; background: var(--mo-destaque); color: var(--mo-sobre-destaque); font-weight: 700; border-radius: var(--raio); }
+.proxima.visivel .proxima-seta { animation: continua-desce 1.8s var(--mo-ease-meio) infinite; }
+.proxima-texto { display: grid; line-height: 1.15; }
+.proxima-texto small { font-family: var(--mo-fonte-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mo-texto-3); }
+.proxima-texto b { font-size: 14.5px; font-weight: 600; }
+.proxima-conta { font-family: var(--mo-fonte-mono); font-size: 11.5px; color: var(--mo-texto-3); padding-left: 10px; border-left: 1px solid var(--mo-linha); }
+@media (max-width: 640px) {
+  .proxima { right: 12px; bottom: 12px; padding: 6px 10px 6px 6px; gap: 8px; }
+  .proxima-conta { display: none; }
+  .continua { grid-template-columns: minmax(0, 1fr); }
+  .continua-seta { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .continua-seta, .proxima-seta { animation: none !important; } }
+.evolucao-controles .mo-tecla.continuar { animation: continua-desce 1.8s var(--mo-ease-meio) infinite; }
