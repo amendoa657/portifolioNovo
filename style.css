@@ -489,8 +489,13 @@ main { position: relative; z-index: 1; }
    Evolução (mantida — só herda as formas do tema)
    ========================================================================== */
 .evolucao { padding-bottom: 0; }
-.evolucao-trilho { position: relative; height: calc(var(--passos, 8) * 58vh + 100vh); }
-.evolucao-palco { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; align-items: center; padding: calc(var(--altura-cabecalho) + 12px) 0 20px; overflow: hidden; }
+.evolucao-trilho { position: relative; }
+.evolucao-palco { position: relative; padding: 0; }
+.evolucao-grade { touch-action: pan-y; user-select: none; }
+.evolucao-barra { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 18px 0 12px; }
+.evolucao-barra .evolucao-commit { margin: 0; }
+.evolucao-controles { display: flex; gap: 8px; }
+.evolucao-controles .mo-tecla:disabled { opacity: 0.35; cursor: default; transform: none; }
 .evolucao-grade { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); grid-template-rows: auto auto; gap: 28px clamp(28px, 5vw, 64px); align-items: center; }
 .evolucao-ano { position: relative; height: clamp(110px, 15vw, 210px); overflow: hidden; font-family: var(--fonte-display); font-size: clamp(110px, 15vw, 210px); font-weight: var(--display-peso); line-height: 1; letter-spacing: -0.065em; font-variant-numeric: tabular-nums; }
 .evolucao-ano span { position: absolute; left: -0.03em; top: 0; color: var(--mo-tom); transition: color var(--mo-dur-media) ease; }
@@ -893,7 +898,9 @@ main { position: relative; z-index: 1; }
   .evolucao-grade { grid-template-columns: 1fr; gap: 14px; }
   .evolucao-ano { height: 84px; font-size: 84px; }
   .evolucao-commit { margin: 4px 0 6px; }
-  .evolucao-texto { min-height: 0; font-size: 15px; }
+  .evolucao-texto { min-height: 7.2em; font-size: 15px; }
+  .evolucao-titulo { min-height: 2.2em; display: flex; align-items: flex-end; }
+  .evolucao-barra { margin: 6px 0 8px; }
   .evolucao-midia { order: -1; }
   .janela-corpo { aspect-ratio: 16 / 9; }
   .janela-legenda { display: none; }

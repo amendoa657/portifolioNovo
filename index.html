@@ -313,7 +313,7 @@
       <header class="secao-cabecalho">
         <p class="secao-rotulo rotulo revelar"><span class="secao-indice">(03)</span> evolução <span class="estrela">✦</span> <span class="secao-comando">git log --reverse</span></p>
         <h2 class="secao-titulo" id="tituloEvolucao" data-pixel-texto>A <em>evolução</em></h2>
-        <p class="secao-intro revelar">De um jogo no GameMaker a um ecossistema inteiro. Role a página: cada commit é um ano.</p>
+        <p class="secao-intro revelar">De um jogo no GameMaker a um ecossistema inteiro, em 13 commits. Use as setas, arraste para o lado ou clique num ponto da linha.</p>
       </header>
     </div>
 
@@ -322,7 +322,13 @@
         <div class="contentor evolucao-grade">
           <div class="evolucao-info" id="evolucaoInfo" aria-live="polite">
             <div class="evolucao-ano" id="evolucaoAno" aria-hidden="true"><span>2019</span></div>
-            <p class="evolucao-commit" id="evolucaoCommit"><b>init</b> commit 1/8</p>
+            <div class="evolucao-barra">
+              <p class="evolucao-commit" id="evolucaoCommit"><b>init</b> commit 1/13</p>
+              <div class="evolucao-controles">
+                <button type="button" class="mo-tecla mo-tecla--icone" id="evoAntes" aria-label="Commit anterior">←</button>
+                <button type="button" class="mo-tecla mo-tecla--icone mo-tecla--destaque" id="evoDepois" aria-label="Próximo commit">→</button>
+              </div>
+            </div>
             <h3 class="evolucao-titulo" id="evolucaoTitulo">primeiro contato</h3>
             <p class="evolucao-texto" id="evolucaoTexto">5º ano, GameMaker Studio 2.</p>
             <div class="evolucao-tags" id="evolucaoTags"></div>

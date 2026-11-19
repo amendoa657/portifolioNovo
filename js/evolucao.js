@@ -235,36 +235,45 @@ end;`,
     if (anterior >= 0 && !reduzido) quadro.animate([{ opacity: 0.2 }, { opacity: 1 }], { duration: 260, easing: 'ease-out' });
   }
 
-  /* A rolagem dentro do trilho escolhe o passo. */
-  function indicePelaRolagem() {
-    const r = trilho.getBoundingClientRect();
-    const total = trilho.offsetHeight - window.innerHeight;
-    const p = Math.min(1, Math.max(0, -r.top / Math.max(1, total)));
-    return Math.min(PASSOS.length - 1, Math.floor(p * PASSOS.length));
-  }
-
+  /* ---------------------------------------------------------------------
+     Controles: setas, arrastar para o lado, clicar nos nós e o teclado.
+     A página rola normal — o carrossel só anda quando você pede, um commit
+     por vez.
+     --------------------------------------------------------------------- */
   function irPara(i) {
-    const total = trilho.offsetHeight - window.innerHeight;
-    const topo = trilho.getBoundingClientRect().top + window.scrollY;
-    const alvo = topo + (total * (i + 0.5)) / PASSOS.length;
-    window.scrollTo({ top: alvo, behavior: reduzido ? 'auto' : 'smooth' });
+    mostrar(Math.max(0, Math.min(PASSOS.length - 1, i)));
+    btnAntes.disabled = atual === 0;
+    btnDepois.disabled = atual === PASSOS.length - 1;
   }
+  const btnAntes = document.getElementById('evoAntes');
+  const btnDepois = document.getElementById('evoDepois');
+  btnAntes.addEventListener('click', () => irPara(atual - 1));
+  btnDepois.addEventListener('click', () => irPara(atual + 1));
 
-  let pendente = false;
-  window.addEventListener('scroll', () => {
-    if (pendente) return;
-    pendente = true;
-    requestAnimationFrame(() => { pendente = false; mostrar(indicePelaRolagem()); });
-  }, { passive: true });
+  /* Arrastar: só conta o gesto claramente horizontal; o vertical é rolagem. */
+  let toque = null;
+  grade.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('button, a')) return;
+    toque = { x: e.clientX, y: e.clientY, id: e.pointerId };
+  });
+  grade.addEventListener('pointerup', (e) => {
+    if (!toque || e.pointerId !== toque.id) return;
+    const dx = e.clientX - toque.x;
+    const dy = e.clientY - toque.y;
+    toque = null;
+    if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.4) irPara(atual + (dx < 0 ? 1 : -1));
+  });
+  grade.addEventListener('pointercancel', () => { toque = null; });
 
-  /* Setas do teclado quando a linha do tempo está presa na tela. */
+  /* Teclado: ← → quando a linha do tempo está na tela. */
   document.addEventListener('keydown', (e) => {
     if (!['ArrowLeft', 'ArrowRight'].includes(e.key) || /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
-    const r = trilho.getBoundingClientRect();
-    if (r.top > 0 || r.bottom < window.innerHeight) return;
+    if (e.target.closest && e.target.closest('#baralho')) return;
+    const r = grade.getBoundingClientRect();
+    if (r.bottom < window.innerHeight * 0.3 || r.top > window.innerHeight * 0.7) return;
     e.preventDefault();
-    irPara(Math.max(0, Math.min(PASSOS.length - 1, atual + (e.key === 'ArrowRight' ? 1 : -1))));
+    irPara(atual + (e.key === 'ArrowRight' ? 1 : -1));
   });
 
-  mostrar(indicePelaRolagem());
+  irPara(0);
 })();
