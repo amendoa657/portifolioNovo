@@ -1,5 +1,5 @@
 /* =========================================================================
-   Projetos: o índice, a busca e a prévia que segue o mouse.
+   Projetos: o índice e a busca.
    E o filtro do "o que eu sei fazer".
    ========================================================================= */
 
@@ -44,59 +44,6 @@
     filtros.forEach((f) => f.setAttribute('aria-pressed', String(f === b)));
     aplicar();
   }));
-
-  /* ---------------------------------------------------------------------
-     Prévia: um quadro que segue o mouse e se revela numa onda de pixels
-     --------------------------------------------------------------------- */
-  const previa = document.getElementById('previa');
-  const quadro = document.getElementById('previaQuadro');
-  const fino = window.matchMedia('(hover: hover) and (pointer: fine)');
-  let alvoX = 0; let alvoY = 0; let x = 0; let y = 0; let vivo = false; let quadroAtual = null;
-
-  function conteudo(linha) {
-    const fonte = linha.dataset.previa;
-    if (fonte === 'ladrilho') return `<div class="previa-ladrilho">${linha.dataset.letra || ''}</div>`;
-    const classes = [linha.dataset.pixelada ? 'pixelada' : '', linha.dataset.previaFundo ? 'contida' : ''].join(' ');
-    return `<img src="${fonte}" alt="" class="${classes}">`;
-  }
-  /* Pré-carrega as imagens das prévias */
-  linhas.forEach((l) => { if (l.dataset.previa !== 'ladrilho') { const i = new Image(); i.src = l.dataset.previa; } });
-
-  function seguir() {
-    x += (alvoX - x) * 0.2;
-    y += (alvoY - y) * 0.2;
-    const giro = Math.max(-6, Math.min(6, (alvoX - x) * 0.08));
-    previa.style.setProperty('--x', x + 'px');
-    previa.style.setProperty('--y', y + 'px');
-    quadro.style.setProperty('--giro', giro.toFixed(2) + 'deg');
-    if (vivo) requestAnimationFrame(seguir);
-  }
-  linhas.forEach((l) => {
-    const a = l.querySelector('a');
-    a.addEventListener('pointerenter', (e) => {
-      if (!fino.matches) return;
-      const tom = Array.from(l.classList).find((c) => c.startsWith('mo-tom-'));
-      previa.className = 'previa ativa ' + tom;
-      const trocar = () => { quadro.innerHTML = conteudo(l); };
-      if (!vivo) {
-        vivo = true;
-        alvoX = x = e.clientX + 24;
-        alvoY = y = e.clientY - 120;
-        requestAnimationFrame(seguir);
-      }
-      if (quadroAtual === l) return;
-      quadroAtual = l;
-      if (window.Pixels && !reduzido) {
-        Pixels.revelarElemento(quadro, { passo: 14, corCortina: getComputedStyle(document.documentElement).getPropertyValue('--mo-janela').trim(), trocar });
-      } else trocar();
-    });
-    a.addEventListener('pointermove', (e) => { alvoX = e.clientX + 24; alvoY = e.clientY - 120; });
-  });
-  document.getElementById('indice').addEventListener('pointerleave', () => {
-    vivo = false;
-    quadroAtual = null;
-    previa.classList.remove('ativa');
-  });
 
   /* ---------------------------------------------------------------------
      O que eu sei fazer: destacar por nível e pular para as provas
