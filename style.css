@@ -650,7 +650,7 @@ main { position: relative; z-index: 1; }
 .pilar-onda i:nth-child(2) { width: 80%; background: var(--mo-texto-2); }
 .pilar-onda i:nth-child(3) { width: 62%; }
 .pilar-onda i:nth-child(4) { width: 70%; }
-.ui-rodape { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 14px; margin-top: 14px; }
+.ui-rodape { margin-top: 14px; max-width: 760px; }
 .ui-video { margin: 0; border: var(--bloco-borda); border-radius: var(--raio-g); overflow: hidden; }
 .ui-video video { width: 100%; background: var(--mo-janela); }
 .ui-video figcaption { padding: 8px 12px; font-family: var(--mo-fonte-mono); font-size: 12px; color: var(--mo-texto-3); border-top: 1px solid var(--mo-linha); background: var(--mo-cartao); }
