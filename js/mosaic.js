@@ -18,6 +18,7 @@
      Cada passo tem a sua camada no palco, criada uma vez e carregada antes
      de aparecer — trocar de passo nunca troca src (era isso que travava).
      Passos com várias imagens viram uma galeria que alterna sozinha.
+     As trocas são um fade curto, sem onda de pixels: aqui a imagem é o que importa.
      --------------------------------------------------------------------- */
   const passos = Array.from(document.querySelectorAll('#vitrinePassos .passo'));
   const trilho = document.getElementById('vitrineTrilho');
@@ -103,30 +104,19 @@
       legenda.textContent = p.dataset.legenda;
       contador.textContent = String(i + 1).padStart(2, '0');
     };
-    if (anterior < 0 || !window.Pixels || reduzido) { trocar(); return; }
-    /* A onda entra pela borda esquerda do palco, na altura do passo ativo. */
-    const r = mesa.getBoundingClientRect();
-    const pr = p.getBoundingClientRect();
-    Pixels.revelarElemento(mesa, {
-      clienteX: r.left + 1,
-      clienteY: Math.max(r.top + 1, Math.min(r.bottom - 1, pr.top + pr.height / 2)),
-      passo: 24, corCortina: corDe('--mo-janela'), trocar,
-    });
+    /* Troca simples: a camada nova aparece num fade curto (no CSS). */
+    trocar();
   }
 
-  /* Galerias: o passo ativo com várias imagens alterna a cada 2,6 s. */
+  /* Galerias: o passo ativo com várias imagens alterna a cada 3,2 s, num fade. */
   if (!reduzido) {
     setInterval(() => {
       if (atual < 0 || document.hidden || !naTela(mesa)) return;
       const c = camadas[atual];
       if (c.itens.length < 2) return;
       galeria = (galeria + 1) % c.itens.length;
-      const r = mesa.getBoundingClientRect();
-      Pixels.revelarElemento(mesa, {
-        clienteX: r.right - 1, clienteY: r.top + r.height / 2, passo: 24, corCortina: corDe('--mo-janela'),
-        trocar: () => c.itens.forEach((el, n) => el.classList.toggle('visivel', n === galeria)),
-      });
-    }, 2600);
+      c.itens.forEach((el, n) => el.classList.toggle('visivel', n === galeria));
+    }, 3200);
   }
 
   /* O passo ativo é o que está mais perto do ponto de leitura da tela. */

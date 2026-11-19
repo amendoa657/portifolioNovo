@@ -1,8 +1,7 @@
 /* =========================================================================
    Evolução: a linha do tempo presa na tela.
    A rolagem avança os commits; cada troca rola o ano (quando ele muda),
-   entra o texto em cascata e a janela se revela numa onda de pixels que sai
-   do nó. Alguns commits mostram uma imagem; outros, um trecho de código de
+   entra o texto em cascata e a janela troca num fade curto. Alguns commits mostram uma imagem; outros, um trecho de código de
    verdade, tirado do repositório do projeto.
    ========================================================================= */
 
@@ -231,20 +230,9 @@ end;`,
       }
       legenda.textContent = p.legenda;
     };
-    if (anterior < 0 || !window.Pixels) { trocar(); return; }
-
-    /* A onda sai do nó da linha do tempo (ou do canto mais perto dele). */
-    const r = quadro.getBoundingClientRect();
-    let cx = r.left + r.width * (i / (PASSOS.length - 1));
-    let cy = r.bottom;
-    if (origem) { cx = origem.x; cy = origem.y; }
-    cx = Math.max(r.left, Math.min(r.right, cx));
-    cy = Math.max(r.top, Math.min(r.bottom, cy));
-    Pixels.revelarElemento(quadro, {
-      clienteX: cx, clienteY: cy, passo: 16,
-      corCortina: getComputedStyle(document.documentElement).getPropertyValue('--mo-janela').trim(),
-      trocar,
-    });
+    trocar();
+    /* Troca simples: a janela nova entra num fade curto. */
+    if (anterior >= 0 && !reduzido) quadro.animate([{ opacity: 0.2 }, { opacity: 1 }], { duration: 260, easing: 'ease-out' });
   }
 
   /* A rolagem dentro do trilho escolhe o passo. */
