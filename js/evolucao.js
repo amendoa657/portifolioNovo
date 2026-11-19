@@ -243,20 +243,12 @@ end;`,
   function irPara(i) {
     mostrar(Math.max(0, Math.min(PASSOS.length - 1, i)));
     btnAntes.disabled = atual === 0;
-    /* No último commit, a seta da direita vira "continuar": leva para a Mosaic. */
-    const fim = atual === PASSOS.length - 1;
-    btnDepois.textContent = fim ? '↓' : '→';
-    btnDepois.setAttribute('aria-label', fim ? 'Continuar para a Mosaic' : 'Próximo commit');
-    btnDepois.classList.toggle('continuar', fim);
+    btnDepois.disabled = atual === PASSOS.length - 1;
   }
   const btnAntes = document.getElementById('evoAntes');
   const btnDepois = document.getElementById('evoDepois');
   btnAntes.addEventListener('click', () => irPara(atual - 1));
-  btnDepois.addEventListener('click', (e) => {
-    if (atual < PASSOS.length - 1) { irPara(atual + 1); return; }
-    const r = btnDepois.getBoundingClientRect();
-    if (window.irPara) window.irPara('#mosaic', e.clientX || r.left, e.clientY || r.top);
-  });
+  btnDepois.addEventListener('click', () => irPara(atual + 1));
 
   /* Arrastar: só conta o gesto claramente horizontal; o vertical é rolagem. */
   let toque = null;
