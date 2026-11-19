@@ -2,8 +2,8 @@
    Mosaic: os três capítulos.
    01 · OS     — carrossel vertical: os passos rolam, o palco fica preso à
                  direita (sangrando até a borda) e troca numa onda de pixels.
-   02 · Store  — um baralho de telas: a carta da frente sai numa onda e o
-                 monte anda; dá para arrastar, clicar ou usar as setas.
+   02 · Store  — um baralho de telas: clique, arraste ou use as setas e a
+                 próxima tela vem para a frente, sem transição.
    03 · UI     — os pilares funcionando de verdade.
    ========================================================================= */
 
@@ -137,6 +137,17 @@
   }
   window.addEventListener('scroll', () => { if (!agendado) { agendado = true; requestAnimationFrame(escolherPeloScroll); } }, { passive: true });
   window.addEventListener('resize', escolherPeloScroll);
+
+  /* O palco fica centralizado na tela, na mesma altura do passo ativo
+     (que é escolhido pelo meio da tela). A altura da imagem depende da
+     largura, então o topo é calculado aqui. */
+  function centralizarPalco() {
+    if (window.innerWidth < 960) { vitrine.style.removeProperty('--palco-topo'); return; }
+    const topo = Math.max(72, (window.innerHeight - mesa.offsetHeight) / 2);
+    vitrine.style.setProperty('--palco-topo', topo + 'px');
+  }
+  centralizarPalco();
+  window.addEventListener('resize', centralizarPalco);
   mostrarPasso(0);
 
   /* ---------------------------------------------------------------------
@@ -149,7 +160,6 @@
   const desc = document.getElementById('baralhoDesc');
   const N = cartas.length;
   let frente = 0;
-  let animando = false;
   Odometro.montar(num, 2);
 
   function arrumar() {
@@ -167,24 +177,10 @@
     [1, 2].forEach((k) => { const img = cartas[(frente + k) % N].querySelector('img'); img.loading = 'eager'; });
   }
 
-  function avancar(direcao, origem) {
-    if (animando) return;
-    animando = true;
-    const proxima = (frente + direcao + N) % N;
-    const carta = cartas[frente];
-    const r = carta.getBoundingClientRect();
-    const trocar = () => { frente = proxima; arrumar(); };
-    if (!window.Pixels || reduzido) { trocar(); animando = false; return; }
-    /* A carta da frente vira pixels a partir da origem; a de trás já está embaixo. */
-    const ox = origem ? origem.x : (direcao > 0 ? r.right - 1 : r.left + 1);
-    const oy = origem ? origem.y : r.top + r.height / 2;
-    const alvo = cartas[proxima];
-    alvo.style.setProperty('--pos', 0);
-    alvo.style.zIndex = '30';
-    Pixels.revelarElemento(alvo, {
-      clienteX: ox, clienteY: oy, passo: 20, corCortina: corDe('--mo-janela'),
-      trocar,
-    }).then(() => { alvo.style.zIndex = ''; animando = false; });
+  /* Troca direta, sem transição: a próxima tela vai para a frente na hora. */
+  function avancar(direcao) {
+    frente = (frente + direcao + N) % N;
+    arrumar();
   }
 
   document.getElementById('baralhoDepois').addEventListener('click', () => avancar(1));
@@ -223,7 +219,7 @@
     c.style.removeProperty('--arrasto');
     c.style.removeProperty('--arrasto-giro');
     if (arrastou && Math.abs(t.dx) > 70) avancar(t.dx < 0 ? 1 : -1);
-    else if (!arrastou && e.type === 'pointerup') avancar(1, { x: e.clientX, y: e.clientY });
+    else if (!arrastou && e.type === 'pointerup') avancar(1);
   };
   baralho.addEventListener('pointerup', soltar);
   baralho.addEventListener('pointercancel', soltar);

@@ -587,7 +587,7 @@ main { position: relative; z-index: 1; }
 .passo-chips li { font-family: var(--mo-fonte-mono); font-size: 11.5px; padding: 3px 8px; border: 1px solid color-mix(in srgb, var(--mo-tom) 45%, transparent); color: var(--mo-tom); border-radius: var(--raio); }
 .vitrine-palco {
   position: sticky;
-  top: calc(var(--altura-cabecalho) + 7vh);
+  top: var(--palco-topo, calc(var(--altura-cabecalho) + 7vh));
   flex: 1 1 0;
   min-width: 0;
   container-type: inline-size;
@@ -623,7 +623,7 @@ main { position: relative; z-index: 1; }
 .baralho { position: relative; aspect-ratio: 16 / 10.4; margin: 20px 40px 40px 0; cursor: grab; touch-action: pan-y; outline: none; }
 .baralho:focus-visible { outline: 2px solid var(--mo-destaque); outline-offset: 10px; }
 .baralho.arrastando { cursor: grabbing; }
-.carta { position: absolute; inset: 0; margin: 0; overflow: hidden; background: var(--mo-janela); border: var(--bloco-borda); border-radius: var(--raio-g); box-shadow: var(--bloco-sombra); transform: translate(calc(var(--pos) * 16px + var(--arrasto, 0px)), calc(var(--pos) * 16px)) rotate(calc(var(--pos) * 1.4deg + var(--arrasto-giro, 0deg))) scale(calc(1 - var(--pos) * 0.03)); z-index: calc(20 - var(--pos)); opacity: calc(1 - var(--pos) * 0.22); transition: transform 0.5s var(--mo-ease-saida), opacity 0.4s ease; }
+.carta { position: absolute; inset: 0; margin: 0; overflow: hidden; background: var(--mo-janela); border: var(--bloco-borda); border-radius: var(--raio-g); box-shadow: var(--bloco-sombra); transform: translate(calc(var(--pos) * 16px + var(--arrasto, 0px)), calc(var(--pos) * 16px)) rotate(calc(var(--pos) * 1.4deg + var(--arrasto-giro, 0deg))) scale(calc(1 - var(--pos) * 0.03)); z-index: calc(20 - var(--pos)); opacity: calc(1 - var(--pos) * 0.22); }
 .baralho.arrastando .carta { transition: none; }
 .carta img { width: 100%; height: 100%; object-fit: cover; object-position: top left; pointer-events: none; user-select: none; -webkit-user-drag: none; }
 .fita { margin-top: clamp(40px, 6vw, 80px); display: grid; gap: 14px; }
@@ -952,3 +952,4 @@ main { position: relative; z-index: 1; }
   .js .revelar, .js .sobre-manifesto .peca { opacity: 1; transform: none; }
   .faixa-trilho { animation: none; }
 }
+.baralho-contador .fita-digito { transition: none; }
